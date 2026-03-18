@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+// 모든 페이지를 동적 렌더링으로 강제 (빌드 시 정적 생성 안 함)
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "대한인재 - 인재 육성의 중심",
   description:
