@@ -119,6 +119,7 @@ export default function AnnouncementsPage() {
                   <tr
                     key={notice.id}
                     className="border-b border-white/5 hover:bg-[#1a2744]/50 transition-colors cursor-pointer"
+                    onClick={() => window.location.href = `/notice/announcements/${notice.id}`}
                   >
                     <td className="px-4 py-4 text-center">
                       <span
