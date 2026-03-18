@@ -258,6 +258,29 @@ export interface RecordsResponse {
   totalPages: number;
 }
 
+// 선수 레이팅
+export interface PlayerRating {
+  id: string;
+  user_id: string | null;
+  member_code: string;
+  name: string;
+  region: string;
+  rating: number;
+  grade: string;
+  birth_date: string | null;
+  gender: string;
+  organization: string;
+  wins: number;
+  losses: number;
+  draws: number;
+  last_competition: string;
+  last_competition_date: string | null;
+  is_active: boolean;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 // 주간 통계
 export interface WeeklyStats {
   newUsers: number;

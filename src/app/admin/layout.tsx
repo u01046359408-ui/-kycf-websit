@@ -15,6 +15,7 @@ import {
   Shield,
   Settings,
   ClipboardList,
+  Trophy,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -54,6 +55,11 @@ const sidebarItems = [
     label: "회원 기록 관리",
     href: "/admin/records",
     icon: ClipboardList,
+  },
+  {
+    label: "레이팅 관리",
+    href: "/admin/ratings",
+    icon: Trophy,
   },
 ];
 

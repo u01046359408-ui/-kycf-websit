@@ -52,6 +52,7 @@ const navItems: NavItem[] = [
       { label: "국외 결과", href: "/events/results-international" },
       { label: "국내 결과", href: "/events/results-domestic" },
       { label: "대회기록", href: "/events/records" },
+      { label: "레이팅 및 선수명단", href: "/ratings" },
     ],
   },
   {

@@ -133,6 +133,26 @@ export async function POST(request: NextRequest) {
       recordData = memberRecord.data as Record<string, unknown>;
     }
 
+    // 선수 레이팅 데이터 조회 (user_id 기반)
+    const { data: playerRating } = await supabase
+      .from("player_ratings")
+      .select("member_code, rating, grade, wins, losses, draws")
+      .eq("user_id", user.id)
+      .eq("is_active", true)
+      .maybeSingle();
+
+    if (playerRating) {
+      recordData = {
+        ...(recordData || {}),
+        player_member_code: playerRating.member_code,
+        player_rating: playerRating.rating,
+        player_grade: playerRating.grade,
+        player_wins: playerRating.wins,
+        player_losses: playerRating.losses,
+        player_draws: playerRating.draws,
+      };
+    }
+
     // PDF 생성
     const pdfBuffer = await generateCertificatePDF({
       certificateType,
