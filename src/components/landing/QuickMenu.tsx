@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import {
-  Trophy,
+  Star,
   Calendar,
   ClipboardCheck,
   FileText,
@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 const menuItems = [
-  { icon: Trophy, label: "인재현황", href: "/events/results-domestic" },
+  { icon: Star, label: "레이팅 및 선수명단", href: "/ratings" },
   { icon: Calendar, label: "행사일정", href: "/events/schedule" },
   { icon: ClipboardCheck, label: "참가신청", href: "/apply" },
   { icon: FileText, label: "증명서발급", href: "/certificate" },
