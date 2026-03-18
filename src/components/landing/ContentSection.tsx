@@ -12,42 +12,14 @@ const stats = [
   { value: 99, suffix: "%", label: "만족도" },
 ];
 
-const eventNotices = [
-  { date: "2026.03.15", title: "제42회 전국 장기대회 개최 안내" },
-  { date: "2026.03.10", title: "2026 상반기 체스 챔피언십 참가자 모집" },
-  { date: "2026.02.28", title: "제15회 청소년 바둑 인재선발전 결과 발표" },
-  { date: "2026.02.20", title: "2026 국제 두뇌스포츠 교류전 일정 공지" },
-  { date: "2026.02.15", title: "제38회 여성부 장기대회 접수 시작" },
+// 하드코딩 데이터는 API 로딩 실패 시 폴백으로만 사용
+const fallbackEventNotices = [
+  { date: "2026.03.15", title: "공지사항을 불러오는 중입니다..." },
 ];
-
-const federationNotices = [
-  { date: "2026.03.12", title: "2026년도 정기총회 개최 안내" },
-  { date: "2026.03.05", title: "심판자격증 갱신 교육 일정 안내" },
-  { date: "2026.02.25", title: "지부 및 지회 등록 갱신 공지" },
-  { date: "2026.02.18", title: "2026년 연간 사업계획서 공개" },
-  { date: "2026.02.10", title: "이사회 회의록 공개 (제127차)" },
+const fallbackFederationNotices = [
+  { date: "2026.03.12", title: "공지사항을 불러오는 중입니다..." },
 ];
-
-const upcomingEvents = [
-  {
-    date: "2026.04.05",
-    name: "제43회 전국 장기대회",
-    location: "서울 올림픽공원 체조경기장",
-    status: "접수중" as const,
-  },
-  {
-    date: "2026.04.18",
-    name: "2026 체스 챔피언십",
-    location: "부산 벡스코 컨벤션홀",
-    status: "마감" as const,
-  },
-  {
-    date: "2026.05.10",
-    name: "제16회 청소년 바둑 인재선발전",
-    location: "대전 컨벤션센터",
-    status: "예정" as const,
-  },
-];
+const fallbackEvents: { date: string; name: string; location: string; status: "접수중" | "마감" | "예정" }[] = [];
 
 /* ──────────────────── HOOKS ──────────────────── */
 
@@ -151,6 +123,64 @@ function StatItem({
 
 export default function ContentSection() {
   const [activeTab, setActiveTab] = useState<"event" | "federation">("event");
+  const [eventNotices, setEventNotices] = useState(fallbackEventNotices);
+  const [federationNotices, setFederationNotices] = useState(fallbackFederationNotices);
+  const [upcomingEvents, setUpcomingEvents] = useState(fallbackEvents);
+
+  // API에서 공지사항 가져오기
+  useEffect(() => {
+    async function fetchNotices() {
+      try {
+        // 행사공지
+        const eventRes = await fetch("/api/content/announcements?category=행사공지&limit=5");
+        if (eventRes.ok) {
+          const eventData = await eventRes.json();
+          if (eventData.data?.length > 0) {
+            setEventNotices(eventData.data.map((item: { created_at: string; title: string }) => ({
+              date: new Date(item.created_at).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" }).replace(/\. /g, ".").replace(".", ""),
+              title: item.title,
+            })));
+          }
+        }
+
+        // 연맹공지
+        const fedRes = await fetch("/api/content/announcements?category=연맹공지&limit=5");
+        if (fedRes.ok) {
+          const fedData = await fedRes.json();
+          if (fedData.data?.length > 0) {
+            setFederationNotices(fedData.data.map((item: { created_at: string; title: string }) => ({
+              date: new Date(item.created_at).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" }).replace(/\. /g, ".").replace(".", ""),
+              title: item.title,
+            })));
+          }
+        }
+      } catch {
+        // API 실패 시 폴백 데이터 유지
+      }
+    }
+
+    async function fetchEvents() {
+      try {
+        const res = await fetch("/api/content/events?limit=3");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.data?.length > 0) {
+            setUpcomingEvents(data.data.map((item: { date: string; title: string; location: string; status: string }) => ({
+              date: item.date,
+              name: item.title,
+              location: item.location || "",
+              status: (item.status || "예정") as "접수중" | "마감" | "예정",
+            })));
+          }
+        }
+      } catch {
+        // API 실패 시 폴백 데이터 유지
+      }
+    }
+
+    fetchNotices();
+    fetchEvents();
+  }, []);
 
   useEffect(() => {
     const sections = document.querySelectorAll(".fade-in-section");
@@ -271,7 +301,7 @@ export default function ContentSection() {
                 {/* More link */}
                 <div className="mt-4 pt-3 border-t border-gray-100 text-right">
                   <Link
-                    href="#"
+                    href="/notice/announcements"
                     className="text-sm text-[#2B5BA8] font-medium hover:underline"
                   >
                     더보기 +
