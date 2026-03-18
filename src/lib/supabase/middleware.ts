@@ -10,13 +10,21 @@ const ADMIN_ROUTES = ["/admin"];
 // 로그인한 사용자가 접근하면 안 되는 경로
 const AUTH_ROUTES = ["/login", "/signup", "/forgot-password"];
 
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co";
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder-key";
+
 export async function updateSession(request: NextRequest) {
+  // 환경변수가 없거나 placeholder면 미들웨어 건너뜀
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || SUPABASE_URL.includes("placeholder")) {
+    return NextResponse.next();
+  }
+
   try {
     let supabaseResponse = NextResponse.next({ request });
 
     const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY,
       {
         cookies: {
           getAll() {
