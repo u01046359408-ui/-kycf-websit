@@ -13,12 +13,8 @@ const stats = [
 ];
 
 // 하드코딩 데이터는 API 로딩 실패 시 폴백으로만 사용
-const fallbackEventNotices = [
-  { date: "2026.03.15", title: "공지사항을 불러오는 중입니다..." },
-];
-const fallbackFederationNotices = [
-  { date: "2026.03.12", title: "공지사항을 불러오는 중입니다..." },
-];
+const fallbackEventNotices: { id?: string; date: string; title: string }[] = [];
+const fallbackFederationNotices: { id?: string; date: string; title: string }[] = [];
 const fallbackEvents: { date: string; name: string; location: string; status: "접수중" | "마감" | "예정" }[] = [];
 
 /* ──────────────────── HOOKS ──────────────────── */
@@ -136,8 +132,9 @@ export default function ContentSection() {
         if (eventRes.ok) {
           const eventData = await eventRes.json();
           if (eventData.data?.length > 0) {
-            setEventNotices(eventData.data.map((item: { created_at: string; title: string }) => ({
-              date: new Date(item.created_at).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" }).replace(/\. /g, ".").replace(".", ""),
+            setEventNotices(eventData.data.map((item: { id: string; created_at: string; title: string }) => ({
+              id: item.id,
+              date: new Date(item.created_at).getFullYear() + "." + String(new Date(item.created_at).getMonth() + 1).padStart(2, "0") + "." + String(new Date(item.created_at).getDate()).padStart(2, "0"),
               title: item.title,
             })));
           }
@@ -148,8 +145,9 @@ export default function ContentSection() {
         if (fedRes.ok) {
           const fedData = await fedRes.json();
           if (fedData.data?.length > 0) {
-            setFederationNotices(fedData.data.map((item: { created_at: string; title: string }) => ({
-              date: new Date(item.created_at).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" }).replace(/\. /g, ".").replace(".", ""),
+            setFederationNotices(fedData.data.map((item: { id: string; created_at: string; title: string }) => ({
+              id: item.id,
+              date: new Date(item.created_at).getFullYear() + "." + String(new Date(item.created_at).getMonth() + 1).padStart(2, "0") + "." + String(new Date(item.created_at).getDate()).padStart(2, "0"),
               title: item.title,
             })));
           }
@@ -286,7 +284,7 @@ export default function ContentSection() {
                 <ul className="space-y-3">
                   {currentNotices.map((item, i) => (
                     <li key={i}>
-                      <Link href="#" className="flex items-start gap-3 group">
+                      <Link href="/notice/announcements" className="flex items-start gap-3 group">
                         <span className="text-xs text-gray-400 whitespace-nowrap tabular-nums pt-0.5">
                           {item.date}
                         </span>
