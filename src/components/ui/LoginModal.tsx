@@ -28,60 +28,49 @@ export default function LoginModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (!email || !password) {
+      setError("이메일과 비밀번호를 입력해 주세요.");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      if (!email || !password) {
-        setError("이메일과 비밀번호를 입력해 주세요.");
-        setLoading(false);
-        return;
-      }
-
       const supabase = createClient();
 
-      // 클라이언트에서 직접 로그인 (세션 쿠키 자동 설정)
-      const { error: signInError } = await supabase.auth.signInWithPassword({
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (signInError) {
-        const msg = getKoreanError(signInError.message);
-        setError(msg);
+        setError(getKoreanError(signInError.message));
         setLoading(false);
         return;
       }
 
-      // 로그인 성공 — 즉시 모달 닫고 페이지 이동
-      onSuccess?.();
-      onClose();
+      if (!data.session) {
+        setError("로그인에 실패했습니다. 다시 시도해 주세요.");
+        setLoading(false);
+        return;
+      }
 
-      // admin 체크 (3초 타임아웃)
-      const adminCheck = new Promise<boolean>(async (resolve) => {
-        try {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user) {
-            const { data: profile } = await supabase
-              .from("profiles")
-              .select("role")
-              .eq("id", user.id)
-              .single();
-            resolve(profile?.role === "admin");
-          } else {
-            resolve(false);
-          }
-        } catch {
-          resolve(false);
-        }
-      });
+      // 로그인 성공 — 바로 페이지 이동 (가장 빠른 방법)
+      // admin 여부는 profiles에서 확인
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", data.user.id)
+        .single();
 
-      const timeout = new Promise<boolean>((resolve) => setTimeout(() => resolve(false), 3000));
-      const isAdmin = await Promise.race([adminCheck, timeout]);
-
-      window.location.href = isAdmin ? "/admin" : window.location.pathname;
+      if (profile?.role === "admin") {
+        window.location.href = "/admin";
+      } else {
+        window.location.href = "/";
+      }
     } catch {
       setError("로그인 중 오류가 발생했습니다. 다시 시도해 주세요.");
-    } finally {
       setLoading(false);
     }
   };
