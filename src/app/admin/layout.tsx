@@ -116,7 +116,7 @@ export default function AdminLayout({
               <Shield className="w-5 h-5 text-[#0a1628]" />
             </div>
             <div>
-              <span className="text-lg font-bold text-white">대한인재</span>
+              <span className="text-lg font-bold text-white">한국유소년체스연맹</span>
               <span className="block text-xs text-[#c9a84c]">관리자</span>
             </div>
           </Link>

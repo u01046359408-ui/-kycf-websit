@@ -1006,7 +1006,7 @@ export default function AdminRecordsPage() {
                 onChange={(e) =>
                   updateDetailField("awarding_organization", e.target.value)
                 }
-                placeholder="예: 대한인재개발연맹"
+                placeholder="예: 한국유소년체스연맹개발연맹"
                 className={inputClass}
               />
             </div>

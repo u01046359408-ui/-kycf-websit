@@ -38,7 +38,7 @@ export default function ForgotPasswordPage() {
         <div className="text-center mb-8">
           <Link href="/">
             <h1 className="text-3xl font-bold bg-gradient-to-r from-[#c9a84c] to-[#e8d48b] bg-clip-text text-transparent">
-              대한인재
+              한국유소년체스연맹
             </h1>
           </Link>
           <p className="mt-2 text-sm text-gray-400">비밀번호 찾기</p>

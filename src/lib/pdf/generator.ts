@@ -376,9 +376,9 @@ export async function generateCertificatePDF(
         margins: { top: MARGIN, bottom: MARGIN, left: MARGIN, right: MARGIN },
         info: {
           Title: `${CERTIFICATE_INFO[data.certificateType].name} - ${data.applicantName}`,
-          Author: "대한인재개발원",
+          Author: "한국유소년체스연맹",
           Subject: CERTIFICATE_INFO[data.certificateType].name,
-          Creator: "대한인재개발원 증명서 발급 시스템",
+          Creator: "한국유소년체스연맹 증명서 발급 시스템",
         },
       });
 
@@ -418,7 +418,7 @@ export async function generateCertificatePDF(
         .font(boldFont)
         .fontSize(14)
         .fillColor("#1a365d")
-        .text("대한인재개발원", MARGIN, currentY, {
+        .text("한국유소년체스연맹", MARGIN, currentY, {
           width: CONTENT_WIDTH,
           align: "center",
         });
@@ -592,7 +592,7 @@ export async function generateCertificatePDF(
         .font(boldFont)
         .fontSize(16)
         .fillColor("#1a365d")
-        .text("대한인재개발원장", MARGIN, currentY, {
+        .text("한국유소년체스연맹장", MARGIN, currentY, {
           width: CONTENT_WIDTH,
           align: "center",
         });
@@ -614,7 +614,7 @@ export async function generateCertificatePDF(
         .font(boldFont)
         .fontSize(8)
         .fillColor("#cc0000")
-        .text("대한인재", sealCenterX - 18, sealCenterY - 12, {
+        .text("한국유소년체스연맹", sealCenterX - 18, sealCenterY - 12, {
           width: 36,
           align: "center",
         });
@@ -648,7 +648,7 @@ export async function generateCertificatePDF(
         .fontSize(8)
         .fillColor("#888888")
         .text(
-          "본 증명서는 대한인재개발원에서 발급한 공식 문서입니다.",
+          "본 증명서는 한국유소년체스연맹에서 발급한 공식 문서입니다.",
           MARGIN,
           bottomLineY + 15,
           {

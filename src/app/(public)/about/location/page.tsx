@@ -2,7 +2,7 @@ import PageBanner from "@/components/layout/PageBanner";
 import { MapPin, Phone, Printer, Mail, TrainFront, Bus } from "lucide-react";
 
 export const metadata = {
-  title: "오시는길 - 대한인재",
+  title: "오시는길 - 한국유소년체스연맹",
 };
 
 export default function LocationPage() {
@@ -12,7 +12,7 @@ export default function LocationPage() {
         title="오시는길"
         breadcrumb={[
           { label: "홈", href: "/" },
-          { label: "대한인재", href: "/about" },
+          { label: "한국유소년체스연맹", href: "/about" },
           { label: "오시는길", href: "/about/location" },
         ]}
       />
@@ -36,7 +36,7 @@ export default function LocationPage() {
               <div>
                 <p className="text-sm text-gray-400 mb-1">주소</p>
                 <p className="text-white text-sm">
-                  (04524) 서울특별시 중구 세종대로 110, 대한인재빌딩 8층
+                  (04524) 서울특별시 중구 세종대로 110, 한국유소년체스연맹빌딩 8층
                 </p>
               </div>
             </div>

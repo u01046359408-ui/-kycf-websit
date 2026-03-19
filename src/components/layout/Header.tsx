@@ -19,7 +19,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   {
-    label: "대한인재",
+    label: "한국유소년체스연맹",
     href: "/about",
     subItems: [
       { label: "인사말", href: "/about/greeting" },

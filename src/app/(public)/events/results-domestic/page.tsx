@@ -1,7 +1,7 @@
 import PageBanner from "@/components/layout/PageBanner";
 
 export const metadata = {
-  title: "국내 결과 - 대한인재",
+  title: "국내 결과 - 한국유소년체스연맹",
 };
 
 interface DomesticResult {

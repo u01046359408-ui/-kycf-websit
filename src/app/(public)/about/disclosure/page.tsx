@@ -2,7 +2,7 @@ import PageBanner from "@/components/layout/PageBanner";
 import { FileText, Download } from "lucide-react";
 
 export const metadata = {
-  title: "경영공시 - 대한인재",
+  title: "경영공시 - 한국유소년체스연맹",
 };
 
 const disclosures = [
@@ -91,7 +91,7 @@ export default function DisclosurePage() {
         title="경영공시"
         breadcrumb={[
           { label: "홈", href: "/" },
-          { label: "대한인재", href: "/about" },
+          { label: "한국유소년체스연맹", href: "/about" },
           { label: "경영공시", href: "/about/disclosure" },
         ]}
       />

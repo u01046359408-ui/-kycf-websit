@@ -2,7 +2,7 @@ import PageBanner from "@/components/layout/PageBanner";
 import { Target, Users, BookOpen, Award, TrendingUp, Globe } from "lucide-react";
 
 export const metadata = {
-  title: "비전 및 목표 - 대한인재",
+  title: "비전 및 목표 - 한국유소년체스연맹",
 };
 
 const missions = [
@@ -56,7 +56,7 @@ export default function VisionPage() {
         title="비전 및 목표"
         breadcrumb={[
           { label: "홈", href: "/" },
-          { label: "대한인재", href: "/about" },
+          { label: "한국유소년체스연맹", href: "/about" },
           { label: "비전 및 목표", href: "/about/vision" },
         ]}
       />
@@ -76,7 +76,7 @@ export default function VisionPage() {
               <span className="text-[#c9a84c]">대한민국 인재 플랫폼</span>
             </h2>
             <p className="mt-4 text-gray-400 leading-relaxed">
-              대한인재는 모든 사람이 자신의 잠재력을 발휘할 수 있도록
+              한국유소년체스연맹는 모든 사람이 자신의 잠재력을 발휘할 수 있도록
               교육과 인증의 기회를 제공하며, 대한민국 인재 생태계의
               중심이 되겠습니다.
             </p>
@@ -89,7 +89,7 @@ export default function VisionPage() {
             미션
           </h3>
           <p className="text-center text-gray-400 text-sm mb-10">
-            대한인재가 추구하는 세 가지 핵심 가치
+            한국유소년체스연맹가 추구하는 세 가지 핵심 가치
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {missions.map((mission) => (

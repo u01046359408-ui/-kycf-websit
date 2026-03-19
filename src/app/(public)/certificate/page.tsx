@@ -3,21 +3,21 @@ import PageBanner from "@/components/layout/PageBanner";
 import { FileText, Award, GraduationCap, BookOpen, Briefcase, ScrollText } from "lucide-react";
 
 export const metadata = {
-  title: "증명서 발급 - 대한인재",
+  title: "증명서 발급 - 한국유소년체스연맹",
 };
 
 const certificates = [
   {
     id: "qualification",
     name: "자격증명서",
-    description: "대한인재에서 취득한 자격증에 대한 공식 증명서를 발급받으실 수 있습니다.",
+    description: "한국유소년체스연맹에서 취득한 자격증에 대한 공식 증명서를 발급받으실 수 있습니다.",
     price: 5000,
     icon: Award,
   },
   {
     id: "career",
     name: "경력증명서",
-    description: "대한인재 관련 경력사항을 공식적으로 증명하는 문서입니다.",
+    description: "한국유소년체스연맹 관련 경력사항을 공식적으로 증명하는 문서입니다.",
     price: 3000,
     icon: Briefcase,
   },
@@ -38,7 +38,7 @@ const certificates = [
   {
     id: "employment",
     name: "재직증명서",
-    description: "대한인재 소속 재직 사실을 공식적으로 증명하는 문서입니다.",
+    description: "한국유소년체스연맹 소속 재직 사실을 공식적으로 증명하는 문서입니다.",
     price: 2000,
     icon: FileText,
   },
@@ -69,7 +69,7 @@ export default function CertificatePage() {
             필요한 <span className="text-[#c9a84c]">증명서</span>를 선택하세요
           </h2>
           <p className="mt-3 text-gray-400 max-w-2xl mx-auto">
-            대한인재에서 발급 가능한 각종 증명서를 온라인으로 간편하게 신청하실 수 있습니다.
+            한국유소년체스연맹에서 발급 가능한 각종 증명서를 온라인으로 간편하게 신청하실 수 있습니다.
             신청 후 결제가 완료되면 즉시 발급됩니다.
           </p>
         </div>

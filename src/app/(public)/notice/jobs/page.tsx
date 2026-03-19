@@ -43,7 +43,7 @@ export default function JobsPage() {
         {/* 안내 박스 */}
         <div className="rounded-xl bg-[#111d35] border border-[#c9a84c]/20 p-5 mb-8">
           <p className="text-gray-300 text-sm leading-relaxed">
-            대한인재 회원 및 관련 기관을 위한 구인/구직 게시판입니다.
+            한국유소년체스연맹 회원 및 관련 기관을 위한 구인/구직 게시판입니다.
             채용 및 구직 등록을 원하시는 분은 사무국(02-1234-5678)으로 문의해 주세요.
           </p>
         </div>

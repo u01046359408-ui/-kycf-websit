@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "인재란 - 대한인재",
+  title: "인재란 - 한국유소년체스연맹",
   description: "인재 인증 제도의 개요, 시스템 설명, 인증 혜택에 대한 안내입니다.",
 };
 
@@ -27,7 +27,7 @@ const certificationCards = [
     icon: Shield,
     title: "공인 인증 시스템",
     description:
-      "대한인재가 공식적으로 인정하는 인증서를 발급하며, 이는 국내외에서 공신력을 갖춘 자격 증명입니다.",
+      "한국유소년체스연맹가 공식적으로 인정하는 인증서를 발급하며, 이는 국내외에서 공신력을 갖춘 자격 증명입니다.",
   },
   {
     icon: GraduationCap,
@@ -70,7 +70,7 @@ const benefits = [
   {
     icon: Award,
     title: "공식 자격 증명",
-    description: "대한인재 공인 인증서를 통해 전문성을 공식적으로 입증할 수 있습니다.",
+    description: "한국유소년체스연맹 공인 인증서를 통해 전문성을 공식적으로 입증할 수 있습니다.",
   },
   {
     icon: TrendingUp,
@@ -120,7 +120,7 @@ export default function AboutTalentPage() {
             </h2>
             <div className="w-12 h-0.5 bg-[#c9a84c] mx-auto mb-6" />
             <p className="text-gray-400 max-w-3xl mx-auto leading-relaxed text-base sm:text-lg">
-              대한인재 인증 제도는 각 분야에서 뛰어난 역량과 잠재력을 갖춘 인재를
+              한국유소년체스연맹 인증 제도는 각 분야에서 뛰어난 역량과 잠재력을 갖춘 인재를
               공식적으로 인정하고 증명하는 국가 공인 인증 시스템입니다. 체계적인
               평가 과정을 통해 개인의 전문성을 객관적으로 검증하며, 인증을 받은
               인재에게는 다양한 혜택과 기회를 제공합니다.
@@ -155,7 +155,7 @@ export default function AboutTalentPage() {
             </h2>
             <div className="w-12 h-0.5 bg-[#c9a84c] mx-auto mb-6" />
             <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              대한인재 인증은 아래의 4단계 절차를 통해 진행됩니다. 각 단계는
+              한국유소년체스연맹 인증은 아래의 4단계 절차를 통해 진행됩니다. 각 단계는
               공정성과 투명성을 기반으로 운영됩니다.
             </p>
           </div>
@@ -194,7 +194,7 @@ export default function AboutTalentPage() {
             </h2>
             <div className="w-12 h-0.5 bg-[#c9a84c] mx-auto mb-6" />
             <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              대한인재 인증을 취득하면 다양한 분야에서 혜택을 누릴 수 있습니다.
+              한국유소년체스연맹 인증을 취득하면 다양한 분야에서 혜택을 누릴 수 있습니다.
             </p>
           </div>
 
@@ -228,7 +228,7 @@ export default function AboutTalentPage() {
             인재 인증에 도전하세요
           </h3>
           <p className="text-gray-400 mb-6 max-w-lg mx-auto">
-            지금 바로 대한인재 인증 평가에 지원하여 당신의 전문성을 공식적으로
+            지금 바로 한국유소년체스연맹 인증 평가에 지원하여 당신의 전문성을 공식적으로
             인정받으세요.
           </p>
           <div className="flex items-center justify-center gap-4 flex-wrap">

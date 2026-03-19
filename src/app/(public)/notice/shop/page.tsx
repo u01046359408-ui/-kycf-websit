@@ -1,14 +1,14 @@
 import PageBanner from "@/components/layout/PageBanner";
 
 export const metadata = {
-  title: "E-Shop - 대한인재",
+  title: "E-Shop - 한국유소년체스연맹",
 };
 
 const products = [
   { id: 1, name: "자격검정 공식 교재 (AI데이터분석사)", price: 35000 },
   { id: 2, name: "직업능력개발 실무 핸드북", price: 28000 },
   { id: 3, name: "자격증 액자 (고급 원목 프레임)", price: 45000 },
-  { id: 4, name: "대한인재 공식 수험서 세트 (3권)", price: 89000 },
+  { id: 4, name: "한국유소년체스연맹 공식 수험서 세트 (3권)", price: 89000 },
   { id: 5, name: "온라인 강의 수강권 (6개월)", price: 150000 },
   { id: 6, name: "자격시험 모의고사 문제집", price: 22000 },
 ];
@@ -31,7 +31,7 @@ export default function ShopPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <p className="text-gray-400 text-sm mb-8">
-          대한인재 공식 교재 및 자격검정 관련 상품을 구매하실 수 있습니다.
+          한국유소년체스연맹 공식 교재 및 자격검정 관련 상품을 구매하실 수 있습니다.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

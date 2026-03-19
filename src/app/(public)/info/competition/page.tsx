@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "대회관련 - 대한인재",
-  description: "대한인재 주최 대회 종류, 참가 요건, 시상 제도에 대한 안내입니다.",
+  title: "대회관련 - 한국유소년체스연맹",
+  description: "한국유소년체스연맹 주최 대회 종류, 참가 요건, 시상 제도에 대한 안내입니다.",
 };
 
 const competitionTypes = [
@@ -58,7 +58,7 @@ const requirements = [
   {
     title: "기본 참가 요건",
     items: [
-      "대한인재 인증서 보유자 (유효기간 내)",
+      "한국유소년체스연맹 인증서 보유자 (유효기간 내)",
       "대회 참가 신청서 제출 완료",
       "참가비 납부 완료 (대회별 상이)",
       "만 15세 이상 대한민국 국적자",
@@ -143,7 +143,7 @@ export default function CompetitionPage() {
             </h2>
             <div className="w-12 h-0.5 bg-[#c9a84c] mx-auto mb-6" />
             <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              대한인재는 다양한 규모와 분야의 대회를 개최하여 인재들의 역량을
+              한국유소년체스연맹는 다양한 규모와 분야의 대회를 개최하여 인재들의 역량을
               검증하고 성장을 지원합니다.
             </p>
           </div>

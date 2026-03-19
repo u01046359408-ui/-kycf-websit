@@ -1,7 +1,7 @@
 import PageBanner from "@/components/layout/PageBanner";
 
 export const metadata = {
-  title: "후원사 - 대한인재",
+  title: "후원사 - 한국유소년체스연맹",
 };
 
 const sponsors = [
@@ -33,14 +33,14 @@ export default function SponsorsPage() {
         title="후원사"
         breadcrumb={[
           { label: "홈", href: "/" },
-          { label: "대한인재", href: "/about" },
+          { label: "한국유소년체스연맹", href: "/about" },
           { label: "후원사", href: "/about/sponsors" },
         ]}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
-          대한인재와 함께 대한민국 인재 양성에 힘을 보태주시는 소중한
+          한국유소년체스연맹와 함께 대한민국 인재 양성에 힘을 보태주시는 소중한
           후원사입니다.
         </p>
 
@@ -80,7 +80,7 @@ export default function SponsorsPage() {
             후원사로 참여하시겠습니까?
           </h3>
           <p className="text-sm text-gray-400 mb-6">
-            대한인재와 함께 인재 양성에 동참해 주세요.
+            한국유소년체스연맹와 함께 인재 양성에 동참해 주세요.
           </p>
           <a
             href="mailto:sponsor@daehantalent.kr"

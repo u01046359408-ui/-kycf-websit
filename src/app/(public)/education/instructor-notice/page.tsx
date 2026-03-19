@@ -1,7 +1,7 @@
 import PageBanner from "@/components/layout/PageBanner";
 
 export const metadata = {
-  title: "지도사 공지사항 - 대한인재",
+  title: "지도사 공지사항 - 한국유소년체스연맹",
 };
 
 interface NoticeItem {

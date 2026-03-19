@@ -1,14 +1,14 @@
 import PageBanner from "@/components/layout/PageBanner";
 
 export const metadata = {
-  title: "후원 및 기부 - 대한인재",
+  title: "후원 및 기부 - 한국유소년체스연맹",
 };
 
 const benefits = [
   { title: "세금 혜택", desc: "후원금은 소득세법에 따라 기부금 세액공제 혜택을 받으실 수 있습니다." },
-  { title: "후원 감사장", desc: "연간 100만원 이상 후원 시 대한인재 이사장 명의의 감사장을 수여합니다." },
+  { title: "후원 감사장", desc: "연간 100만원 이상 후원 시 한국유소년체스연맹 이사장 명의의 감사장을 수여합니다." },
   { title: "행사 초청", desc: "주요 행사 및 포럼에 VIP로 초청되어 네트워킹 기회를 제공받습니다." },
-  { title: "소식지 발송", desc: "분기별 대한인재 소식지 및 연간 보고서를 받아보실 수 있습니다." },
+  { title: "소식지 발송", desc: "분기별 한국유소년체스연맹 소식지 및 연간 보고서를 받아보실 수 있습니다." },
 ];
 
 export default function SupportPage() {
@@ -27,11 +27,11 @@ export default function SupportPage() {
         {/* Introduction */}
         <section className="text-center max-w-3xl mx-auto">
           <h2 className="text-2xl font-bold text-white mb-4">
-            대한인재와 <span className="text-[#c9a84c]">함께</span>해 주세요
+            한국유소년체스연맹와 <span className="text-[#c9a84c]">함께</span>해 주세요
           </h2>
           <div className="w-16 h-0.5 bg-[#c9a84c] rounded-full mx-auto mb-6" />
           <p className="text-gray-300 leading-relaxed">
-            (사)대한인재개발원은 대한민국 인재 양성과 직업능력 개발을 위해 노력하고 있습니다.
+            (사)한국유소년체스연맹은 대한민국 인재 양성과 직업능력 개발을 위해 노력하고 있습니다.
             여러분의 소중한 후원은 청년 취업 지원, 소외 계층 직업교육, 자격검정 제도 발전에
             사용됩니다. 작은 관심이 큰 변화를 만듭니다.
           </p>
@@ -79,7 +79,7 @@ export default function SupportPage() {
               </div>
               <div>
                 <p className="text-gray-400 text-sm mb-1">예금주</p>
-                <p className="text-white font-semibold text-lg">(사)대한인재개발원</p>
+                <p className="text-white font-semibold text-lg">(사)한국유소년체스연맹</p>
               </div>
               <div>
                 <p className="text-gray-400 text-sm mb-1">입금 시 참고</p>

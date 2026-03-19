@@ -2,7 +2,7 @@ import PageBanner from "@/components/layout/PageBanner";
 import { FileText, Download } from "lucide-react";
 
 export const metadata = {
-  title: "규정 - 대한인재",
+  title: "규정 - 한국유소년체스연맹",
 };
 
 const regulations = [
@@ -63,14 +63,14 @@ export default function RegulationsPage() {
         title="규정"
         breadcrumb={[
           { label: "홈", href: "/" },
-          { label: "대한인재", href: "/about" },
+          { label: "한국유소년체스연맹", href: "/about" },
           { label: "규정", href: "/about/regulations" },
         ]}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <p className="text-gray-400 mb-8">
-          대한인재의 주요 규정을 열람하실 수 있습니다.
+          한국유소년체스연맹의 주요 규정을 열람하실 수 있습니다.
         </p>
 
         {/* Table */}

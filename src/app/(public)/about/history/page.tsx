@@ -1,7 +1,7 @@
 import PageBanner from "@/components/layout/PageBanner";
 
 export const metadata = {
-  title: "연혁 - 대한인재",
+  title: "연혁 - 한국유소년체스연맹",
 };
 
 const historyData = [
@@ -39,7 +39,7 @@ const historyData = [
   {
     year: "2020",
     events: [
-      { month: "01", text: "(사)대한인재개발원 법인 설립" },
+      { month: "01", text: "(사)한국유소년체스연맹 법인 설립" },
       { month: "04", text: "초대 이사장 취임" },
       { month: "09", text: "제1회 자격 인증 시험 시행" },
     ],
@@ -53,7 +53,7 @@ export default function HistoryPage() {
         title="연혁"
         breadcrumb={[
           { label: "홈", href: "/" },
-          { label: "대한인재", href: "/about" },
+          { label: "한국유소년체스연맹", href: "/about" },
           { label: "연혁", href: "/about/history" },
         ]}
       />

@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "윤리강령 - 대한인재",
-  description: "대한인재 윤리강령, 공정 경쟁 원칙, 징계 규정에 대한 안내입니다.",
+  title: "윤리강령 - 한국유소년체스연맹",
+  description: "한국유소년체스연맹 윤리강령, 공정 경쟁 원칙, 징계 규정에 대한 안내입니다.",
 };
 
 const coreValues = [
@@ -149,13 +149,13 @@ export default function EthicsPage() {
           <div className="bg-gradient-to-r from-[#c9a84c]/10 via-[#1a2744] to-[#c9a84c]/10 border border-[#c9a84c]/20 rounded-2xl p-8 sm:p-10 text-center">
             <HandHeart className="w-10 h-10 text-[#c9a84c] mx-auto mb-4" />
             <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">
-              대한인재 윤리강령 전문
+              한국유소년체스연맹 윤리강령 전문
             </h2>
             <p className="text-gray-400 leading-relaxed max-w-3xl mx-auto text-sm sm:text-base">
-              대한인재는 공정하고 투명한 인재 인증 제도의 운영을 통해 대한민국의
+              한국유소년체스연맹는 공정하고 투명한 인재 인증 제도의 운영을 통해 대한민국의
               인재 육성에 기여합니다. 우리는 모든 참가자의 권리를 존중하며, 정직과
               성실을 바탕으로 한 건전한 경쟁 문화를 조성합니다. 본 윤리강령은
-              대한인재의 모든 구성원, 참가자, 심사위원, 관계자가 준수해야 할
+              한국유소년체스연맹의 모든 구성원, 참가자, 심사위원, 관계자가 준수해야 할
               행동 규범을 명시하며, 이를 통해 인증 제도의 신뢰성과 가치를
               보전합니다.
             </p>
@@ -170,7 +170,7 @@ export default function EthicsPage() {
             </h2>
             <div className="w-12 h-0.5 bg-[#c9a84c] mx-auto mb-6" />
             <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              대한인재가 추구하는 6가지 핵심 가치입니다. 모든 활동의 기반이 되는
+              한국유소년체스연맹가 추구하는 6가지 핵심 가치입니다. 모든 활동의 기반이 되는
               원칙입니다.
             </p>
           </div>

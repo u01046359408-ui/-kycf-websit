@@ -7,7 +7,7 @@ import { Send, User, Phone, Mail, Calendar, Building, Trophy } from "lucide-reac
 const mockEvents = [
   { id: "1", name: "2026 전국 인재발굴 대회" },
   { id: "2", name: "2026 청소년 리더십 챌린지" },
-  { id: "3", name: "제15회 대한인재 평가대전" },
+  { id: "3", name: "제15회 한국유소년체스연맹 평가대전" },
   { id: "4", name: "2026 국제 인재교류 프로그램" },
   { id: "5", name: "2026 하계 지도사 연수" },
 ];

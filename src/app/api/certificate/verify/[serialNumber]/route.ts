@@ -63,7 +63,7 @@ export async function GET(
         certificate_type: certName,
         applicant_name: maskedName,
         issued_at: certificate.issued_at,
-        issuer: "대한인재개발원",
+        issuer: "한국유소년체스연맹",
       },
     });
   } catch (error) {

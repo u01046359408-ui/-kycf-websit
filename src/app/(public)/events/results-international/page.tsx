@@ -1,7 +1,7 @@
 import PageBanner from "@/components/layout/PageBanner";
 
 export const metadata = {
-  title: "국외 결과 - 대한인재",
+  title: "국외 결과 - 한국유소년체스연맹",
 };
 
 interface InternationalResult {
@@ -75,7 +75,7 @@ export default function ResultsInternationalPage() {
             국제 대회 <span className="text-[#c9a84c]">성과</span>
           </h2>
           <p className="mt-2 text-gray-400">
-            대한인재개발원 소속 선수단의 국제 대회 참가 결과입니다.
+            한국유소년체스연맹 소속 선수단의 국제 대회 참가 결과입니다.
           </p>
         </div>
 

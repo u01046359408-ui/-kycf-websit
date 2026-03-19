@@ -1,7 +1,7 @@
 import PageBanner from "@/components/layout/PageBanner";
 
 export const metadata = {
-  title: "대회기록 - 대한인재",
+  title: "대회기록 - 한국유소년체스연맹",
 };
 
 interface CompetitionRecord {
@@ -110,7 +110,7 @@ export default function RecordsPage() {
             역대 대회 <span className="text-[#c9a84c]">기록</span>
           </h2>
           <p className="mt-2 text-gray-400">
-            대한인재개발원 주최/참가 대회의 주요 수상 기록을 아카이브합니다.
+            한국유소년체스연맹 주최/참가 대회의 주요 수상 기록을 아카이브합니다.
           </p>
         </div>
 

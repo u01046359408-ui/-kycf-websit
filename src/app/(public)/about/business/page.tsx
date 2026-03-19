@@ -2,7 +2,7 @@ import PageBanner from "@/components/layout/PageBanner";
 import { GraduationCap, FileCheck, Handshake, Lightbulb } from "lucide-react";
 
 export const metadata = {
-  title: "주요사업 - 대한인재",
+  title: "주요사업 - 한국유소년체스연맹",
 };
 
 const businesses = [
@@ -43,14 +43,14 @@ export default function BusinessPage() {
         title="주요사업"
         breadcrumb={[
           { label: "홈", href: "/" },
-          { label: "대한인재", href: "/about" },
+          { label: "한국유소년체스연맹", href: "/about" },
           { label: "주요사업", href: "/about/business" },
         ]}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
-          대한인재는 인재 양성의 전 과정을 아우르는 4대 핵심 사업을 운영하고
+          한국유소년체스연맹는 인재 양성의 전 과정을 아우르는 4대 핵심 사업을 운영하고
           있습니다.
         </p>
 

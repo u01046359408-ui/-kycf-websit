@@ -56,11 +56,11 @@ function LoginForm() {
         <div className="text-center mb-8">
           <Link href="/">
             <h1 className="text-3xl font-bold bg-gradient-to-r from-[#c9a84c] to-[#e8d48b] bg-clip-text text-transparent">
-              대한인재
+              한국유소년체스연맹
             </h1>
           </Link>
           <p className="mt-2 text-sm text-gray-400">
-            인재 육성의 중심, 대한인재에 오신 것을 환영합니다
+            인재 육성의 중심, 한국유소년체스연맹에 오신 것을 환영합니다
           </p>
         </div>
 

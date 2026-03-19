@@ -9,8 +9,8 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "평가방법 - 대한인재",
-  description: "대한인재 인증 평가 방법, 절차, 기준 및 채점 시스템에 대한 안내입니다.",
+  title: "평가방법 - 한국유소년체스연맹",
+  description: "한국유소년체스연맹 인증 평가 방법, 절차, 기준 및 채점 시스템에 대한 안내입니다.",
 };
 
 const evaluationSteps = [
@@ -139,7 +139,7 @@ export default function EvaluationPage() {
             </h2>
             <div className="w-12 h-0.5 bg-[#c9a84c] mx-auto mb-6" />
             <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              대한인재 인증 평가는 총 6단계로 구성되며, 각 단계는 공정하고
+              한국유소년체스연맹 인증 평가는 총 6단계로 구성되며, 각 단계는 공정하고
               투명한 기준에 따라 진행됩니다.
             </p>
           </div>

@@ -2,7 +2,7 @@ import { Phone, Mail, MapPin } from "lucide-react";
 import Link from "next/link";
 
 const quickLinks = [
-  { label: "대한인재 소개", href: "/about" },
+  { label: "한국유소년체스연맹 소개", href: "/about" },
   { label: "종목정보", href: "/info" },
   { label: "행사/인재", href: "/events" },
   { label: "알림마당", href: "/notice" },
@@ -37,7 +37,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="mt-3 text-sm text-white/60 leading-relaxed">
-              대한인재는 대한민국 인재 육성과 발전을 위해 노력하는 기관입니다.
+              한국유소년체스연맹는 대한민국 인재 육성과 발전을 위해 노력하는 기관입니다.
               교육, 연수, 행사를 통해 미래를 이끌어갈 인재를 양성합니다.
             </p>
           </div>
@@ -127,7 +127,7 @@ export default function Footer() {
             ))}
           </div>
           <p className="text-xs text-white/40">
-            &copy; {new Date().getFullYear()} 대한인재. All rights reserved.
+            &copy; {new Date().getFullYear()} 한국유소년체스연맹. All rights reserved.
           </p>
         </div>
       </div>

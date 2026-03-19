@@ -1,7 +1,7 @@
 import PageBanner from "@/components/layout/PageBanner";
 
 export const metadata = {
-  title: "조직도 - 대한인재",
+  title: "조직도 - 한국유소년체스연맹",
 };
 
 interface OrgNode {
@@ -82,14 +82,14 @@ export default function OrganizationPage() {
         title="조직도"
         breadcrumb={[
           { label: "홈", href: "/" },
-          { label: "대한인재", href: "/about" },
+          { label: "한국유소년체스연맹", href: "/about" },
           { label: "조직도", href: "/about/organization" },
         ]}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
-          대한인재는 효율적인 조직 운영을 통해 인재 양성과 자격 인증 사업을
+          한국유소년체스연맹는 효율적인 조직 운영을 통해 인재 양성과 자격 인증 사업을
           체계적으로 수행하고 있습니다.
         </p>
 

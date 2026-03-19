@@ -201,7 +201,7 @@ function PaymentContent() {
                 <div className="flex justify-between items-start pb-4 border-b border-gray-100">
                   <div>
                     <p className="text-[#222] font-medium">{cert?.name || "증명서"}</p>
-                    <p className="text-sm text-gray-400 mt-1">대한인재 공식 증명서</p>
+                    <p className="text-sm text-gray-400 mt-1">한국유소년체스연맹 공식 증명서</p>
                   </div>
                   <span className="text-[#222] font-medium whitespace-nowrap ml-4">
                     {cert?.price.toLocaleString()}원

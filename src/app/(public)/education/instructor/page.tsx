@@ -1,7 +1,7 @@
 import PageBanner from "@/components/layout/PageBanner";
 
 export const metadata = {
-  title: "지도사 과정안내 - 대한인재",
+  title: "지도사 과정안내 - 한국유소년체스연맹",
 };
 
 const curriculum = [
@@ -39,7 +39,7 @@ export default function InstructorCoursePage() {
             지도사 <span className="text-[#c9a84c]">양성과정</span>
           </h2>
           <p className="text-gray-400 leading-relaxed max-w-3xl">
-            대한인재개발원 지도사 양성과정은 인재개발 분야의 전문 지도 인력을 양성하기 위한
+            한국유소년체스연맹 지도사 양성과정은 인재개발 분야의 전문 지도 인력을 양성하기 위한
             체계적인 교육 프로그램입니다. 총 100시간의 이론 및 실습 교육을 통해 현장에서
             즉시 활동할 수 있는 역량을 갖춘 지도사를 배출합니다.
           </p>

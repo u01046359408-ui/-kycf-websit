@@ -2,12 +2,12 @@ import Link from "next/link";
 import PageBanner from "@/components/layout/PageBanner";
 
 export const metadata = {
-  title: "사이트맵 - 대한인재",
+  title: "사이트맵 - 한국유소년체스연맹",
 };
 
 const sitemapSections = [
   {
-    title: "대한인재",
+    title: "한국유소년체스연맹",
     links: [
       { label: "인사말", href: "/about/greeting" },
       { label: "설립목적", href: "/about/purpose" },

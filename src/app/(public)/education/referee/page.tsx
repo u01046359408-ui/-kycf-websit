@@ -1,7 +1,7 @@
 import PageBanner from "@/components/layout/PageBanner";
 
 export const metadata = {
-  title: "심판 과정안내 - 대한인재",
+  title: "심판 과정안내 - 한국유소년체스연맹",
 };
 
 const levels = [
@@ -64,7 +64,7 @@ export default function RefereeCoursePage() {
             심판 <span className="text-[#c9a84c]">양성과정</span>
           </h2>
           <p className="text-gray-400 leading-relaxed max-w-3xl">
-            대한인재개발원 심판 양성과정은 공정하고 전문적인 대회 운영을 위한 심판 인력을
+            한국유소년체스연맹 심판 양성과정은 공정하고 전문적인 대회 운영을 위한 심판 인력을
             체계적으로 양성합니다. 급수별 단계적 교육을 통해 시/도 대회부터 국제 대회까지
             활동할 수 있는 자격을 부여합니다.
           </p>

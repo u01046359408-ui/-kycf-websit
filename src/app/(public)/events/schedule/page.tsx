@@ -59,7 +59,7 @@ export default function EventSchedulePage() {
             다가오는 <span className="text-[#c9a84c]">행사 일정</span>
           </h2>
           <p className="mt-2 text-gray-400">
-            대한인재개발원에서 주최하는 행사 및 대회 일정을 확인하세요.
+            한국유소년체스연맹에서 주최하는 행사 및 대회 일정을 확인하세요.
           </p>
         </div>
 
