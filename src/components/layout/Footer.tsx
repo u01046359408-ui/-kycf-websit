@@ -33,7 +33,7 @@ export default function Footer() {
             <Link href="/" className="inline-block">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/logo-horizontal_2.png"
+                src="/images/horizontal-logo_3.png"
                 alt="한국유소년체스연맹"
                 style={{ height: "50px", width: "auto" }}
               />
