@@ -281,6 +281,18 @@ export interface PlayerRating {
   updated_at: string;
 }
 
+// 페이지 콘텐츠
+export interface PageContent {
+  id: string;
+  page_key: string;
+  title: string;
+  content: string;
+  metadata: Record<string, unknown>;
+  updated_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 // 주간 통계
 export interface WeeklyStats {
   newUsers: number;

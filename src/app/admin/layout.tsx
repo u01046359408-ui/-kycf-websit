@@ -16,6 +16,7 @@ import {
   Settings,
   ClipboardList,
   Trophy,
+  Pencil,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -45,6 +46,11 @@ const sidebarItems = [
     label: "콘텐츠 관리",
     href: "/admin/content",
     icon: Newspaper,
+  },
+  {
+    label: "페이지 관리",
+    href: "/admin/pages",
+    icon: Pencil,
   },
   {
     label: "템플릿 관리",

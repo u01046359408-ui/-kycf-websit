@@ -1,8 +1,7 @@
-import PageBanner from "@/components/layout/PageBanner";
+"use client";
 
-export const metadata = {
-  title: "조직도 - 한국유소년체스연맹",
-};
+import { useState, useEffect } from "react";
+import PageBanner from "@/components/layout/PageBanner";
 
 interface OrgNode {
   title: string;
@@ -10,7 +9,7 @@ interface OrgNode {
   children?: OrgNode[];
 }
 
-const orgData: OrgNode = {
+const defaultOrgData: OrgNode = {
   title: "이사장",
   name: "홍길동",
   children: [
@@ -76,6 +75,103 @@ function OrgBox({ title, name, highlight }: { title: string; name?: string; high
 }
 
 export default function OrganizationPage() {
+  const [apiContent, setApiContent] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/page-content/organization")
+      .then((res) => {
+        if (res.ok) return res.json();
+        return null;
+      })
+      .then((data) => {
+        if (data?.content && data.content.trim()) {
+          setApiContent(data.content);
+        }
+      })
+      .catch(() => {
+        // fallback to hardcoded content
+      });
+  }, []);
+
+  const orgData = defaultOrgData;
+
+  const renderApiContent = () => (
+    <div className="max-w-3xl mx-auto">
+      <div className="prose prose-invert max-w-none">
+        {apiContent!.split(/\n\n+/).map((paragraph, idx) => (
+          <p key={idx} className="text-gray-300 leading-relaxed whitespace-pre-line">
+            {paragraph}
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderOrgChart = () => (
+    <>
+      <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+        한국유소년체스연맹는 효율적인 조직 운영을 통해 인재 양성과 자격 인증 사업을
+        체계적으로 수행하고 있습니다.
+      </p>
+
+      <div className="flex flex-col items-center overflow-x-auto pb-8">
+        {/* Level 1: 이사장 */}
+        <OrgBox title={orgData.title} name={orgData.name} highlight />
+
+        {/* Connector */}
+        <div className="w-px h-8 bg-[#c9a84c]/40" />
+
+        {/* Level 2: 사무총장 */}
+        <OrgBox
+          title={orgData.children![0].title}
+          name={orgData.children![0].name}
+          highlight
+        />
+
+        {/* Connector */}
+        <div className="w-px h-8 bg-[#c9a84c]/40" />
+
+        {/* Horizontal bar */}
+        <div className="relative w-full max-w-4xl">
+          <div className="absolute top-0 left-[12.5%] right-[12.5%] h-px bg-white/20" />
+
+          {/* Level 3: 본부 */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-8">
+            {orgData.children![0].children!.map((dept) => (
+              <div key={dept.title} className="flex flex-col items-center">
+                {/* Vertical connector from horizontal bar */}
+                <div className="w-px h-4 bg-white/20 -mt-4 mb-4" />
+
+                <OrgBox title={dept.title} />
+
+                {/* Sub-departments */}
+                {dept.children && (
+                  <>
+                    <div className="w-px h-6 bg-white/10" />
+                    <div className="space-y-2">
+                      {dept.children.map((sub) => (
+                        <div
+                          key={sub.title}
+                          className="flex items-center justify-center"
+                        >
+                          <div className="px-4 py-2 rounded-lg border border-white/5 bg-[#111d35] text-center">
+                            <span className="text-xs text-gray-300">
+                              {sub.title}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+
   return (
     <>
       <PageBanner
@@ -88,66 +184,7 @@ export default function OrganizationPage() {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
-          한국유소년체스연맹는 효율적인 조직 운영을 통해 인재 양성과 자격 인증 사업을
-          체계적으로 수행하고 있습니다.
-        </p>
-
-        <div className="flex flex-col items-center overflow-x-auto pb-8">
-          {/* Level 1: 이사장 */}
-          <OrgBox title={orgData.title} name={orgData.name} highlight />
-
-          {/* Connector */}
-          <div className="w-px h-8 bg-[#c9a84c]/40" />
-
-          {/* Level 2: 사무총장 */}
-          <OrgBox
-            title={orgData.children![0].title}
-            name={orgData.children![0].name}
-            highlight
-          />
-
-          {/* Connector */}
-          <div className="w-px h-8 bg-[#c9a84c]/40" />
-
-          {/* Horizontal bar */}
-          <div className="relative w-full max-w-4xl">
-            <div className="absolute top-0 left-[12.5%] right-[12.5%] h-px bg-white/20" />
-
-            {/* Level 3: 본부 */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-8">
-              {orgData.children![0].children!.map((dept) => (
-                <div key={dept.title} className="flex flex-col items-center">
-                  {/* Vertical connector from horizontal bar */}
-                  <div className="w-px h-4 bg-white/20 -mt-4 mb-4" />
-
-                  <OrgBox title={dept.title} />
-
-                  {/* Sub-departments */}
-                  {dept.children && (
-                    <>
-                      <div className="w-px h-6 bg-white/10" />
-                      <div className="space-y-2">
-                        {dept.children.map((sub) => (
-                          <div
-                            key={sub.title}
-                            className="flex items-center justify-center"
-                          >
-                            <div className="px-4 py-2 rounded-lg border border-white/5 bg-[#111d35] text-center">
-                              <span className="text-xs text-gray-300">
-                                {sub.title}
-                              </span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        {apiContent ? renderApiContent() : renderOrgChart()}
       </div>
     </>
   );

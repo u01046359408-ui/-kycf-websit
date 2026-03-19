@@ -1,10 +1,9 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import PageBanner from "@/components/layout/PageBanner";
 
-export const metadata = {
-  title: "연혁 - 한국유소년체스연맹",
-};
-
-const historyData = [
+const defaultHistoryData = [
   {
     year: "2024",
     events: [
@@ -47,6 +46,71 @@ const historyData = [
 ];
 
 export default function HistoryPage() {
+  const [apiContent, setApiContent] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/page-content/history")
+      .then((res) => {
+        if (res.ok) return res.json();
+        return null;
+      })
+      .then((data) => {
+        if (data?.content && data.content.trim()) {
+          setApiContent(data.content);
+        }
+      })
+      .catch(() => {
+        // fallback to hardcoded content
+      });
+  }, []);
+
+  // If API content is available, render it as free-form text
+  const renderApiContent = () => (
+    <div className="max-w-3xl mx-auto">
+      <div className="prose prose-invert max-w-none">
+        {apiContent!.split(/\n\n+/).map((paragraph, idx) => (
+          <p key={idx} className="text-gray-300 leading-relaxed whitespace-pre-line">
+            {paragraph}
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+
+  // Default timeline rendering
+  const renderTimeline = () => (
+    <div className="max-w-3xl mx-auto">
+      <div className="relative">
+        <div className="absolute left-[7.5rem] top-0 bottom-0 w-px bg-gradient-to-b from-[#c9a84c] via-[#c9a84c]/40 to-transparent hidden sm:block" />
+
+        {defaultHistoryData.map((yearGroup) => (
+          <div key={yearGroup.year} className="mb-12 last:mb-0">
+            <div className="flex items-center gap-4 mb-6">
+              <span className="w-[6.5rem] text-right text-2xl font-bold text-[#c9a84c] shrink-0">
+                {yearGroup.year}
+              </span>
+              <div className="hidden sm:flex w-3 h-3 rounded-full bg-[#c9a84c] border-2 border-[#0a1628] ring-2 ring-[#c9a84c]/30 shrink-0 z-10" />
+              <div className="h-px flex-1 bg-white/10 hidden sm:block" />
+            </div>
+
+            <div className="space-y-4 sm:ml-[8.75rem]">
+              {yearGroup.events.map((event, idx) => (
+                <div key={idx} className="flex items-start gap-3 group">
+                  <span className="text-sm text-[#c9a84c] font-medium shrink-0 pt-0.5">
+                    {event.month}월
+                  </span>
+                  <p className="text-gray-300 text-sm leading-relaxed group-hover:text-white transition-colors duration-200">
+                    {event.text}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <>
       <PageBanner
@@ -59,44 +123,7 @@ export default function HistoryPage() {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="max-w-3xl mx-auto">
-          {/* Timeline */}
-          <div className="relative">
-            {/* Vertical line */}
-            <div className="absolute left-[7.5rem] top-0 bottom-0 w-px bg-gradient-to-b from-[#c9a84c] via-[#c9a84c]/40 to-transparent hidden sm:block" />
-
-            {historyData.map((yearGroup) => (
-              <div key={yearGroup.year} className="mb-12 last:mb-0">
-                {/* Year label */}
-                <div className="flex items-center gap-4 mb-6">
-                  <span className="w-[6.5rem] text-right text-2xl font-bold text-[#c9a84c] shrink-0">
-                    {yearGroup.year}
-                  </span>
-                  {/* Dot on line */}
-                  <div className="hidden sm:flex w-3 h-3 rounded-full bg-[#c9a84c] border-2 border-[#0a1628] ring-2 ring-[#c9a84c]/30 shrink-0 z-10" />
-                  <div className="h-px flex-1 bg-white/10 hidden sm:block" />
-                </div>
-
-                {/* Events */}
-                <div className="space-y-4 sm:ml-[8.75rem]">
-                  {yearGroup.events.map((event, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-start gap-3 group"
-                    >
-                      <span className="text-sm text-[#c9a84c] font-medium shrink-0 pt-0.5">
-                        {event.month}월
-                      </span>
-                      <p className="text-gray-300 text-sm leading-relaxed group-hover:text-white transition-colors duration-200">
-                        {event.text}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        {apiContent ? renderApiContent() : renderTimeline()}
       </div>
     </>
   );
