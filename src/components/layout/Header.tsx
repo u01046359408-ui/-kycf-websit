@@ -226,47 +226,18 @@ export default function Header() {
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-[70px]">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 shrink-0">
-              {/* Shield SVG Icon */}
-              <svg
-                width="36"
-                height="40"
-                viewBox="0 0 36 40"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="shrink-0"
-              >
-                <path
-                  d="M18 0L35 7V18C35 29.5 27.5 36 18 40C8.5 36 1 29.5 1 18V7L18 0Z"
-                  fill="#1B2A4A"
-                />
-                <path
-                  d="M18 3L32 9V18C32 27.8 25.5 33.5 18 37C10.5 33.5 4 27.8 4 18V9L18 3Z"
-                  fill="#2B5BA8"
-                />
-                <path
-                  d="M18 8L27 12V18C27 24.5 23 28.5 18 31C13 28.5 9 24.5 9 18V12L18 8Z"
-                  fill="#1B2A4A"
-                />
-                <text
-                  x="18"
-                  y="22"
-                  textAnchor="middle"
-                  fill="#C5963A"
-                  fontSize="10"
-                  fontWeight="bold"
-                  fontFamily="serif"
-                >
-                  大
-                </text>
-              </svg>
+            <Link href="/" className="flex items-center gap-2.5 shrink-0">
+              <img
+                src="/images/logo-circle.png"
+                alt="한국유소년체스연맹 로고"
+                className="w-14 h-14 shrink-0"
+              />
               <div className="flex flex-col">
-                <span className="text-xl font-bold tracking-tight leading-tight">
-                  <span className="text-[#1B2A4A] font-extrabold">대한</span>
-                  <span className="text-[#1B2A4A]">인재</span>
+                <span className="text-xl font-bold tracking-tight leading-tight text-[#1B2A4A]">
+                  한국유소년체스연맹
                 </span>
-                <span className="text-[10px] text-gray-400 tracking-[0.15em] leading-none mt-0.5">
-                  DAEHAN TALENT
+                <span className="text-[11px] text-gray-400 tracking-[0.1em] leading-none mt-1">
+                  KOREA YOUTH CHESS FEDERATION
                 </span>
               </div>
             </Link>
@@ -377,8 +348,7 @@ export default function Header() {
                 onClick={() => setMobileOpen(false)}
               >
                 <span className="text-lg font-bold tracking-tight">
-                  <span className="text-white font-extrabold">대한</span>
-                  <span className="text-white/80">인재</span>
+                  <span className="text-white font-extrabold">한국유소년체스연맹</span>
                 </span>
               </Link>
               <button

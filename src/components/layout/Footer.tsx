@@ -31,10 +31,11 @@ export default function Footer() {
           {/* Col 1: Logo + Description */}
           <div>
             <Link href="/" className="inline-block">
-              <span className="text-xl font-bold tracking-tight">
-                <span className="text-[#C5963A]">대한</span>
-                <span className="text-white">인재</span>
-              </span>
+              <img
+                src="/images/logo-horizontal.png"
+                alt="한국유소년체스연맹"
+                className="h-12"
+              />
             </Link>
             <p className="mt-3 text-sm text-white/60 leading-relaxed">
               한국유소년체스연맹는 대한민국 인재 육성과 발전을 위해 노력하는 기관입니다.
