@@ -56,19 +56,8 @@ export default function LoginModal({
         return;
       }
 
-      // 로그인 성공 — 바로 페이지 이동 (가장 빠른 방법)
-      // admin 여부는 profiles에서 확인
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", data.user.id)
-        .single();
-
-      if (profile?.role === "admin") {
-        window.location.href = "/admin";
-      } else {
-        window.location.href = "/";
-      }
+      // 로그인 성공 — 즉시 페이지 새로고침 (가장 빠르고 안정적)
+      window.location.reload();
     } catch {
       setError("로그인 중 오류가 발생했습니다. 다시 시도해 주세요.");
       setLoading(false);
