@@ -229,7 +229,7 @@ export default function Header() {
             <Link href="/" className="flex items-center gap-2.5 shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/logo-circle.png"
+                src="/images/logo-circle_2.png"
                 alt="한국유소년체스연맹 로고"
                 width={56}
                 height={56}
