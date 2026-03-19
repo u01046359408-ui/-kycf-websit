@@ -52,33 +52,33 @@ export default function LoginModal({
         return;
       }
 
-      // 로그인 성공
-      setEmail("");
-      setPassword("");
-      setError(null);
+      // 로그인 성공 — 즉시 모달 닫고 페이지 이동
       onSuccess?.();
       onClose();
 
-      // admin 체크 후 리다이렉트
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("role")
-            .eq("id", user.id)
-            .single();
-          if (profile?.role === "admin") {
-            window.location.href = "/admin";
-            return;
+      // admin 체크 (3초 타임아웃)
+      const adminCheck = new Promise<boolean>(async (resolve) => {
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            const { data: profile } = await supabase
+              .from("profiles")
+              .select("role")
+              .eq("id", user.id)
+              .single();
+            resolve(profile?.role === "admin");
+          } else {
+            resolve(false);
           }
+        } catch {
+          resolve(false);
         }
-      } catch {
-        // 무시
-      }
+      });
 
-      // 일반 사용자: 페이지 새로고침
-      window.location.href = window.location.pathname;
+      const timeout = new Promise<boolean>((resolve) => setTimeout(() => resolve(false), 3000));
+      const isAdmin = await Promise.race([adminCheck, timeout]);
+
+      window.location.href = isAdmin ? "/admin" : window.location.pathname;
     } catch {
       setError("로그인 중 오류가 발생했습니다. 다시 시도해 주세요.");
     } finally {
