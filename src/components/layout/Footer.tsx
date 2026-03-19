@@ -34,7 +34,7 @@ export default function Footer() {
               <img
                 src="/images/logo-horizontal.png"
                 alt="한국유소년체스연맹"
-                className="h-12"
+                className="h-16"
               />
             </Link>
             <p className="mt-3 text-sm text-white/60 leading-relaxed">

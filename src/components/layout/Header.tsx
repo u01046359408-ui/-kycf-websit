@@ -224,13 +224,13 @@ export default function Header() {
 
         {/* Tier 2 - Main navigation bar */}
         <div className="bg-white border-b border-gray-200">
-          <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-[70px]">
+          <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-[80px]">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 shrink-0">
               <img
                 src="/images/logo-circle.png"
                 alt="한국유소년체스연맹 로고"
-                className="w-[50px] h-[50px] shrink-0"
+                className="w-[60px] h-[60px] shrink-0"
               />
               <div className="flex flex-col">
                 <span className="text-xl font-bold tracking-tight leading-tight text-[#1B2A4A]">
