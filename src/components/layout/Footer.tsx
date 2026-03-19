@@ -31,10 +31,11 @@ export default function Footer() {
           {/* Col 1: Logo + Description */}
           <div>
             <Link href="/" className="inline-block">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/images/logo-horizontal.png"
                 alt="한국유소년체스연맹"
-                className="h-16"
+                style={{ height: "50px", width: "auto" }}
               />
             </Link>
             <p className="mt-3 text-sm text-white/60 leading-relaxed">

@@ -227,16 +227,19 @@ export default function Header() {
           <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-[80px]">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 shrink-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/images/logo-circle.png"
                 alt="한국유소년체스연맹 로고"
-                className="w-[60px] h-[60px] shrink-0"
+                width={56}
+                height={56}
+                style={{ width: "56px", height: "56px", minWidth: "56px" }}
               />
               <div className="flex flex-col">
-                <span className="text-xl font-bold tracking-tight leading-tight text-[#1B2A4A]">
+                <span style={{ fontSize: "20px", fontWeight: 700, color: "#1B2A4A", lineHeight: 1.2 }}>
                   한국유소년체스연맹
                 </span>
-                <span className="text-[11px] text-gray-400 tracking-[0.1em] leading-none mt-1">
+                <span style={{ fontSize: "11px", color: "#9CA3AF", letterSpacing: "0.1em", marginTop: "3px" }}>
                   KOREA YOUTH CHESS FEDERATION
                 </span>
               </div>
