@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { X, Mail, Lock, LogIn, Loader2 } from "lucide-react";
-import { signInWithEmail, signInWithOAuth } from "@/lib/auth/actions";
+import { createClient } from "@/lib/supabase/client";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -12,7 +12,6 @@ interface LoginModalProps {
   message?: string;
 }
 
-// 로그인 모달 - 페이지 이동 없이 로그인 처리
 export default function LoginModal({
   isOpen,
   onClose,
@@ -22,166 +21,182 @@ export default function LoginModal({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setLoading(true);
 
-    startTransition(async () => {
-      const result = await signInWithEmail(email, password);
-
-      if (result.error) {
-        setError(result.error);
-      } else {
-        // 로그인 성공 — admin이면 관리자 페이지로 이동
-        setEmail("");
-        setPassword("");
-        setError(null);
-        onSuccess?.();
-        onClose();
-
-        // profiles에서 role 확인
-        try {
-          const { createClient } = await import("@/lib/supabase/client");
-          const supabase = createClient();
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user) {
-            const { data: profile } = await supabase
-              .from("profiles")
-              .select("role")
-              .eq("id", user.id)
-              .single();
-            if (profile?.role === "admin") {
-              window.location.href = "/admin";
-              return;
-            }
-          }
-        } catch {
-          // 에러 무시
-        }
-        window.location.href = window.location.pathname;
+    try {
+      if (!email || !password) {
+        setError("이메일과 비밀번호를 입력해 주세요.");
+        setLoading(false);
+        return;
       }
-    });
+
+      const supabase = createClient();
+
+      // 클라이언트에서 직접 로그인 (세션 쿠키 자동 설정)
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        const msg = getKoreanError(signInError.message);
+        setError(msg);
+        setLoading(false);
+        return;
+      }
+
+      // 로그인 성공
+      setEmail("");
+      setPassword("");
+      setError(null);
+      onSuccess?.();
+      onClose();
+
+      // admin 체크 후 리다이렉트
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("role")
+            .eq("id", user.id)
+            .single();
+          if (profile?.role === "admin") {
+            window.location.href = "/admin";
+            return;
+          }
+        }
+      } catch {
+        // 무시
+      }
+
+      // 일반 사용자: 페이지 새로고침
+      window.location.href = window.location.pathname;
+    } catch {
+      setError("로그인 중 오류가 발생했습니다. 다시 시도해 주세요.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleOAuthLogin = (provider: "kakao" | "google" | "naver") => {
+  const handleOAuthLogin = async (provider: "kakao" | "google" | "naver") => {
     setError(null);
+    setLoading(true);
 
-    startTransition(async () => {
-      const result = await signInWithOAuth(provider);
+    try {
+      const supabase = createClient();
+      const { data, error: oauthError } = await supabase.auth.signInWithOAuth({
+        provider: provider as "google" | "kakao",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
 
-      if (result.error) {
-        setError(result.error);
-      } else if (result.url) {
-        window.location.href = result.url;
+      if (oauthError) {
+        setError("소셜 로그인 중 오류가 발생했습니다.");
+        setLoading(false);
+        return;
       }
-    });
+
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch {
+      setError("소셜 로그인 중 오류가 발생했습니다.");
+      setLoading(false);
+    }
   };
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center">
-      {/* 배경 오버레이 */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
-
-      {/* 모달 */}
-      <div className="relative w-full max-w-md mx-4 bg-[#111d35] border border-white/10 rounded-2xl shadow-2xl">
-        {/* 닫기 버튼 */}
+      <div className="relative w-full max-w-md mx-4 bg-white rounded-2xl shadow-2xl">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+          className="absolute top-4 right-4 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
           aria-label="닫기"
         >
           <X className="w-5 h-5" />
         </button>
 
         <div className="p-8">
-          {/* 헤더 */}
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-[#c9a84c] to-[#e8d48b] bg-clip-text text-transparent">
-              로그인
-            </h2>
-            {message && (
-              <p className="mt-2 text-sm text-gray-400">{message}</p>
-            )}
-            {!message && (
-              <p className="mt-2 text-sm text-gray-400">
-                서비스를 이용하려면 로그인이 필요합니다
-              </p>
-            )}
+            <h2 className="text-2xl font-bold text-[#1B2A4A]">로그인</h2>
+            <p className="mt-2 text-sm text-gray-500">
+              {message || "서비스를 이용하려면 로그인이 필요합니다"}
+            </p>
           </div>
 
-          {/* 에러 메시지 */}
           {error && (
-            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm text-center">
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm text-center">
               {error}
             </div>
           )}
 
-          {/* 로그인 폼 */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="이메일"
-                disabled={isPending}
+                disabled={loading}
                 required
-                className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#c9a84c]/50 focus:ring-1 focus:ring-[#c9a84c]/50 transition-colors disabled:opacity-50 text-sm"
+                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-[#222] placeholder-gray-400 focus:outline-none focus:border-[#2B5BA8] focus:ring-1 focus:ring-[#2B5BA8] transition-colors disabled:opacity-50 text-sm"
               />
             </div>
 
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="비밀번호"
-                disabled={isPending}
+                disabled={loading}
                 required
-                className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#c9a84c]/50 focus:ring-1 focus:ring-[#c9a84c]/50 transition-colors disabled:opacity-50 text-sm"
+                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-[#222] placeholder-gray-400 focus:outline-none focus:border-[#2B5BA8] focus:ring-1 focus:ring-[#2B5BA8] transition-colors disabled:opacity-50 text-sm"
               />
             </div>
 
             <button
               type="submit"
-              disabled={isPending}
-              className="w-full py-3 bg-gradient-to-r from-[#c9a84c] to-[#d4b85c] text-[#0a1628] font-semibold rounded-lg hover:from-[#d4b85c] hover:to-[#e8d48b] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-[#c9a84c]/20 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              disabled={loading}
+              className="w-full py-3 bg-[#2B5BA8] text-white font-semibold rounded-lg hover:bg-[#1E4A8F] transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
-              {isPending ? (
+              {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 <LogIn className="w-4 h-4" />
               )}
-              {isPending ? "로그인 중..." : "로그인"}
+              {loading ? "로그인 중..." : "로그인"}
             </button>
           </form>
 
-          {/* 구분선 */}
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/10" />
+              <div className="w-full border-t border-gray-200" />
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="px-3 bg-[#111d35] text-gray-500">
-                소셜 로그인
-              </span>
+              <span className="px-3 bg-white text-gray-400">소셜 로그인</span>
             </div>
           </div>
 
-          {/* 소셜 로그인 */}
           <div className="grid grid-cols-3 gap-3">
             <button
               onClick={() => handleOAuthLogin("kakao")}
-              disabled={isPending}
+              disabled={loading}
               className="flex items-center justify-center py-2.5 bg-[#FEE500] rounded-lg hover:bg-[#FEE500]/90 transition-colors disabled:opacity-50"
               aria-label="카카오 로그인"
             >
@@ -192,8 +207,8 @@ export default function LoginModal({
 
             <button
               onClick={() => handleOAuthLogin("google")}
-              disabled={isPending}
-              className="flex items-center justify-center py-2.5 bg-white rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
+              disabled={loading}
+              className="flex items-center justify-center py-2.5 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
               aria-label="구글 로그인"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -206,7 +221,7 @@ export default function LoginModal({
 
             <button
               onClick={() => handleOAuthLogin("naver")}
-              disabled={isPending}
+              disabled={loading}
               className="flex items-center justify-center py-2.5 bg-[#03C75A] rounded-lg hover:bg-[#03C75A]/90 transition-colors disabled:opacity-50"
               aria-label="네이버 로그인"
             >
@@ -216,20 +231,19 @@ export default function LoginModal({
             </button>
           </div>
 
-          {/* 하단 링크 */}
           <div className="mt-6 flex items-center justify-center gap-3 text-xs">
             <Link
               href="/signup"
               onClick={onClose}
-              className="text-gray-400 hover:text-[#c9a84c] transition-colors"
+              className="text-gray-500 hover:text-[#2B5BA8] transition-colors"
             >
               회원가입
             </Link>
-            <span className="text-gray-600">|</span>
+            <span className="text-gray-300">|</span>
             <Link
               href="/forgot-password"
               onClick={onClose}
-              className="text-gray-400 hover:text-[#c9a84c] transition-colors"
+              className="text-gray-500 hover:text-[#2B5BA8] transition-colors"
             >
               비밀번호 찾기
             </Link>
@@ -238,4 +252,14 @@ export default function LoginModal({
       </div>
     </div>
   );
+}
+
+function getKoreanError(message: string): string {
+  const map: Record<string, string> = {
+    "Invalid login credentials": "이메일 또는 비밀번호가 올바르지 않습니다.",
+    "Email not confirmed": "이메일 인증이 완료되지 않았습니다.",
+    "User already registered": "이미 등록된 이메일입니다.",
+    "Email rate limit exceeded": "너무 많은 요청입니다. 잠시 후 다시 시도해 주세요.",
+  };
+  return map[message] || "로그인에 실패했습니다. 다시 시도해 주세요.";
 }

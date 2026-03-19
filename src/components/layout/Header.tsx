@@ -230,7 +230,7 @@ export default function Header() {
               <img
                 src="/images/logo-circle.png"
                 alt="한국유소년체스연맹 로고"
-                className="w-14 h-14 shrink-0"
+                className="w-[50px] h-[50px] shrink-0"
               />
               <div className="flex flex-col">
                 <span className="text-xl font-bold tracking-tight leading-tight text-[#1B2A4A]">
