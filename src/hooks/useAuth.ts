@@ -51,13 +51,13 @@ export function useAuth(): UseAuthReturn {
   );
 
   useEffect(() => {
-    // 초기 사용자 정보 로드
+    // 초기 사용자 정보 로드 (getSession은 로컬 캐시 사용으로 빠름)
     const getInitialUser = async () => {
       try {
         const {
-          data: { user: authUser },
-        } = await supabase.auth.getUser();
-        const mapped = await mapUser(authUser);
+          data: { session },
+        } = await supabase.auth.getSession();
+        const mapped = await mapUser(session?.user ?? null);
         setUser(mapped);
       } catch {
         setUser(null);

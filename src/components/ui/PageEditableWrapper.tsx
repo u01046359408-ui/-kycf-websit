@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { createClient } from "@/lib/supabase/client";
 import { Pencil, Save, X, RotateCcw } from "lucide-react";
 
 interface PageEditableWrapperProps {
@@ -10,8 +10,28 @@ interface PageEditableWrapperProps {
 }
 
 export default function PageEditableWrapper({ pageKey, children }: PageEditableWrapperProps) {
-  const { user } = useAuth();
-  const isAdmin = user?.role === "admin";
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // 가벼운 관리자 체크 (useAuth 대신 직접 세션만 확인)
+  useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        const supabase = createClient();
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("role")
+            .eq("id", session.user.id)
+            .single();
+          setIsAdmin(profile?.role === "admin");
+        }
+      } catch {
+        // 무시
+      }
+    };
+    checkAdmin();
+  }, []);
   const contentRef = useRef<HTMLDivElement>(null);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
