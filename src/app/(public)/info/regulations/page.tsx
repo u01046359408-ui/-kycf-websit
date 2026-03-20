@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import PageBanner from "@/components/layout/PageBanner";
-import { useAuth } from "@/hooks/useAuth";
-import { Pencil, Save, X, BookOpen, ChevronRight } from "lucide-react";
+import PageEditableWrapper from "@/components/ui/PageEditableWrapper";
+import { BookOpen, ChevronRight } from "lucide-react";
 
 const tableOfContents = [
   { id: "general", chapter: "제1장", title: "총칙", articles: "제1조 ~ 제5조" },
@@ -51,121 +50,67 @@ const regulations = [
 ];
 
 export default function RegulationsPage() {
-  const { user } = useAuth();
-  const isAdmin = user?.role === "admin";
-
-  const fallbackContent = `본 규정은 한국유소년체스연맹가 주최 및 주관하는 모든 대회의 공정한 운영을 위해 제정되었습니다. 모든 참가자와 관계자는 본 규정을 숙지하고 준수해야 합니다. 본 규정은 2024년 1월 1일부터 시행됩니다.`;
-
-  const [content, setContent] = useState(fallbackContent);
-  const [editing, setEditing] = useState(false);
-  const [editContent, setEditContent] = useState("");
-  const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
-
-  useEffect(() => {
-    fetch("/api/page-content/regulations")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data?.content && data.content.trim() && data.content.length <= 500) setContent(data.content);
-      })
-      .catch(() => {});
-  }, []);
-
-  const startEdit = () => { setEditContent(content); setEditing(true); setSaved(false); };
-  const cancelEdit = () => { setEditing(false); };
-  const saveEdit = async () => {
-    setSaving(true);
-    try {
-      const res = await fetch("/api/page-content/regulations", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: editContent }) });
-      if (res.ok) { setContent(editContent); setEditing(false); setSaved(true); setTimeout(() => setSaved(false), 3000); }
-    } catch { alert("저장에 실패했습니다."); } finally { setSaving(false); }
-  };
-
-  const renderDefaultContent = () => (
-    <>
-      {/* Intro */}
-      <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-6 sm:p-8 mb-12">
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-xl bg-[#c9a84c]/10 flex items-center justify-center shrink-0">
-            <BookOpen className="w-6 h-6 text-[#c9a84c]" />
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold text-white mb-2">한국유소년체스연맹 대회 경기규정</h2>
-            <div className="text-sm text-gray-400 leading-relaxed space-y-3">
-              {content.split(/\n\n+/).filter(p => p.trim()).map((paragraph, idx) => (
-                <p key={idx} className="whitespace-pre-line">{paragraph}</p>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <aside className="lg:col-span-1">
-          <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-5 sticky top-24">
-            <h3 className="text-sm font-semibold text-[#c9a84c] uppercase tracking-wider mb-4">목차</h3>
-            <nav className="space-y-1">
-              {tableOfContents.map((item) => (
-                <a key={item.id} href={`#${item.id}`} className="flex items-center gap-2 py-2 px-3 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-200 group">
-                  <ChevronRight className="w-3 h-3 text-[#c9a84c]/50 group-hover:text-[#c9a84c] transition-colors duration-200" />
-                  <span className="text-[#c9a84c]/70 text-xs font-mono shrink-0">{item.chapter}</span>
-                  <span>{item.title}</span>
-                </a>
-              ))}
-            </nav>
-          </div>
-        </aside>
-
-        <div className="lg:col-span-3 space-y-8">
-          {regulations.map((section) => (
-            <section key={section.id} id={section.id} className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl overflow-hidden">
-              <div className="px-6 py-4 bg-[#c9a84c]/10 border-b border-white/10">
-                <h3 className="text-lg font-bold text-white">{section.chapter}</h3>
-              </div>
-              <div className="divide-y divide-white/5">
-                {section.rules.map((rule) => (
-                  <div key={rule.article} className="px-6 py-5">
-                    <h4 className="text-sm font-semibold text-[#d4b85c] mb-2">{rule.article}</h4>
-                    <p className="text-sm text-gray-400 leading-relaxed whitespace-pre-line">{rule.content}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-          ))}
-
-          <div className="bg-[#c9a84c]/5 border border-[#c9a84c]/20 rounded-2xl p-5">
-            <p className="text-sm text-gray-400 leading-relaxed">
-              <span className="text-[#c9a84c] font-semibold">부칙:</span> 본 규정은 2024년 1월 1일부터 시행한다. 본 규정 시행 이전에 개최된 대회에 대해서는 종전의 규정을 적용한다. 본 규정에 명시되지 않은 사항은 운영위원회의 결정에 따른다.
-            </p>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-
   return (
     <>
       <PageBanner title="경기규정" breadcrumb={[{ label: "HOME", href: "/" }, { label: "종목정보", href: "/info" }, { label: "경기규정", href: "/info/regulations" }]} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {isAdmin && !editing && (
-          <div className="mb-6 flex items-center gap-3">
-            <button onClick={startEdit} className="flex items-center gap-2 px-4 py-2 bg-[#C5963A] text-white text-sm font-medium rounded-lg hover:bg-[#B08530] transition-colors"><Pencil className="w-4 h-4" />이 페이지 수정</button>
-            {saved && <span className="text-green-500 text-sm">저장되었습니다!</span>}
-          </div>
-        )}
-        {editing ? (
-          <div className="space-y-6 bg-white border border-gray-200 rounded-xl p-6">
-            <h3 className="text-lg font-bold text-[#222]">페이지 수정</h3>
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">본문 내용 (문단 구분: 빈 줄)</label>
-              <textarea value={editContent} onChange={(e) => setEditContent(e.target.value)} rows={15} className="w-full px-4 py-3 border border-gray-200 rounded-lg text-[#222] focus:outline-none focus:border-[#2B5BA8] focus:ring-1 focus:ring-[#2B5BA8] leading-relaxed" />
-            </div>
-            <div className="flex gap-3">
-              <button onClick={saveEdit} disabled={saving} className="flex items-center gap-2 px-6 py-2.5 bg-[#2B5BA8] text-white font-medium rounded-lg hover:bg-[#1E4A8F] transition-colors disabled:opacity-50"><Save className="w-4 h-4" />{saving ? "저장 중..." : "저장"}</button>
-              <button onClick={cancelEdit} className="flex items-center gap-2 px-6 py-2.5 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors"><X className="w-4 h-4" />취소</button>
+        <PageEditableWrapper pageKey="regulations">
+          {/* Intro */}
+          <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-6 sm:p-8 mb-12">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-xl bg-[#c9a84c]/10 flex items-center justify-center shrink-0">
+                <BookOpen className="w-6 h-6 text-[#c9a84c]" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-white mb-2">한국유소년체스연맹 대회 경기규정</h2>
+                <div className="text-sm text-gray-400 leading-relaxed space-y-3">
+                  <p>본 규정은 한국유소년체스연맹가 주최 및 주관하는 모든 대회의 공정한 운영을 위해 제정되었습니다. 모든 참가자와 관계자는 본 규정을 숙지하고 준수해야 합니다. 본 규정은 2024년 1월 1일부터 시행됩니다.</p>
+                </div>
+              </div>
             </div>
           </div>
-        ) : renderDefaultContent()}
+
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <aside className="lg:col-span-1">
+              <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-5 sticky top-24">
+                <h3 className="text-sm font-semibold text-[#c9a84c] uppercase tracking-wider mb-4">목차</h3>
+                <nav className="space-y-1">
+                  {tableOfContents.map((item) => (
+                    <a key={item.id} href={`#${item.id}`} className="flex items-center gap-2 py-2 px-3 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-200 group">
+                      <ChevronRight className="w-3 h-3 text-[#c9a84c]/50 group-hover:text-[#c9a84c] transition-colors duration-200" />
+                      <span className="text-[#c9a84c]/70 text-xs font-mono shrink-0">{item.chapter}</span>
+                      <span>{item.title}</span>
+                    </a>
+                  ))}
+                </nav>
+              </div>
+            </aside>
+
+            <div className="lg:col-span-3 space-y-8">
+              {regulations.map((section) => (
+                <section key={section.id} id={section.id} className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl overflow-hidden">
+                  <div className="px-6 py-4 bg-[#c9a84c]/10 border-b border-white/10">
+                    <h3 className="text-lg font-bold text-white">{section.chapter}</h3>
+                  </div>
+                  <div className="divide-y divide-white/5">
+                    {section.rules.map((rule) => (
+                      <div key={rule.article} className="px-6 py-5">
+                        <h4 className="text-sm font-semibold text-[#d4b85c] mb-2">{rule.article}</h4>
+                        <p className="text-sm text-gray-400 leading-relaxed whitespace-pre-line">{rule.content}</p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              ))}
+
+              <div className="bg-[#c9a84c]/5 border border-[#c9a84c]/20 rounded-2xl p-5">
+                <p className="text-sm text-gray-400 leading-relaxed">
+                  <span className="text-[#c9a84c] font-semibold">부칙:</span> 본 규정은 2024년 1월 1일부터 시행한다. 본 규정 시행 이전에 개최된 대회에 대해서는 종전의 규정을 적용한다. 본 규정에 명시되지 않은 사항은 운영위원회의 결정에 따른다.
+                </p>
+              </div>
+            </div>
+          </div>
+        </PageEditableWrapper>
       </div>
     </>
   );
