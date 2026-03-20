@@ -39,16 +39,18 @@ export default function LoginModal({
     try {
       const supabase = createClient();
 
-      // 10초 타임아웃 추가
-      const loginPromise = supabase.auth.signInWithPassword({ email, password });
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("TIMEOUT")), 10000)
-      );
+      // 로그인 시도 (최대 2번)
+      let data = null;
+      let signInError = null;
 
-      const { data, error: signInError } = await Promise.race([
-        loginPromise,
-        timeoutPromise as never,
-      ]);
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const result = await supabase.auth.signInWithPassword({ email, password });
+        data = result.data;
+        signInError = result.error;
+        if (!signInError && data?.session) break;
+        if (signInError && !signInError.message.includes("fetch")) break; // 네트워크 에러만 재시도
+        if (attempt === 0) await new Promise(r => setTimeout(r, 2000)); // 2초 후 재시도
+      }
 
       if (signInError) {
         setError(getKoreanError(signInError.message));
@@ -64,12 +66,8 @@ export default function LoginModal({
 
       // 로그인 성공 — 즉시 페이지 새로고침
       window.location.reload();
-    } catch (err) {
-      if (err instanceof Error && err.message === "TIMEOUT") {
-        setError("서버 응답이 느립니다. 다시 시도해 주세요.");
-      } else {
-        setError("로그인 중 오류가 발생했습니다. 다시 시도해 주세요.");
-      }
+    } catch {
+      setError("서버 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.");
       setLoading(false);
     }
   };
