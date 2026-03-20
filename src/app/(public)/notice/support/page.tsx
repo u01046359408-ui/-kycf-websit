@@ -16,7 +16,36 @@ export default function SupportPage() {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
 
-  const [content, setContent] = useState("");
+  const fallbackContent = `한국유소년체스연맹와 함께해 주세요
+
+(사)한국유소년체스연맹은 대한민국 인재 양성과 직업능력 개발을 위해 노력하고 있습니다. 여러분의 소중한 후원은 청년 취업 지원, 소외 계층 직업교육, 자격검정 제도 발전에 사용됩니다. 작은 관심이 큰 변화를 만듭니다.
+
+후원 방법
+
+정기 후원
+매월 일정 금액을 자동이체로 후원하실 수 있습니다. 정기 후원자에게는 연말정산용 기부금 영수증을 일괄 발급해 드립니다. 월 1만원부터 참여 가능합니다.
+
+일시 후원
+원하시는 금액을 1회 후원하실 수 있습니다. 아래 계좌로 입금 후 사무국으로 연락 주시면 기부금 영수증을 발급해 드립니다.
+
+후원 계좌 안내
+은행명: 국민은행
+계좌번호: 123-456-789012
+예금주: (사)한국유소년체스연맹
+입금 시 참고: 성함 + "후원"
+
+후원자 혜택
+01. 세금 혜택 - 후원금은 소득세법에 따라 기부금 세액공제 혜택을 받으실 수 있습니다.
+02. 후원 감사장 - 연간 100만원 이상 후원 시 한국유소년체스연맹 이사장 명의의 감사장을 수여합니다.
+03. 행사 초청 - 주요 행사 및 포럼에 VIP로 초청되어 네트워킹 기회를 제공받습니다.
+04. 소식지 발송 - 분기별 한국유소년체스연맹 소식지 및 연간 보고서를 받아보실 수 있습니다.
+
+후원 문의
+담당부서: 사무국 후원팀
+전화번호: 02-1234-5678
+이메일: support@daehantalent.or.kr`;
+
+  const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
   const [editContent, setEditContent] = useState("");
   const [saving, setSaving] = useState(false);

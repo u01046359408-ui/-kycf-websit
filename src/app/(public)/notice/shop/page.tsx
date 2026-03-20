@@ -22,7 +22,17 @@ export default function ShopPage() {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
 
-  const [content, setContent] = useState("");
+  const fallbackContent = `한국유소년체스연맹 공식 교재 및 자격검정 관련 상품을 구매하실 수 있습니다.
+
+상품 목록:
+1. 자격검정 공식 교재 (AI데이터분석사) - 35,000원
+2. 직업능력개발 실무 핸드북 - 28,000원
+3. 자격증 액자 (고급 원목 프레임) - 45,000원
+4. 한국유소년체스연맹 공식 수험서 세트 (3권) - 89,000원
+5. 온라인 강의 수강권 (6개월) - 150,000원
+6. 자격시험 모의고사 문제집 - 22,000원`;
+
+  const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
   const [editContent, setEditContent] = useState("");
   const [saving, setSaving] = useState(false);

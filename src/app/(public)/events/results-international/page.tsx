@@ -26,7 +26,19 @@ export default function ResultsInternationalPage() {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
 
-  const [content, setContent] = useState("");
+  const fallbackContent = `국제 대회 성과
+
+한국유소년체스연맹 소속 선수단의 국제 대회 참가 결과입니다.
+
+1. 2025 아시아 인재개발 챔피언십 / 2025.11.15~11.17 / 일본 도쿄, 도쿄빅사이트 / 종합 2위 (금 3, 은 5, 동 2) / 선수 24명, 임원 8명
+2. 제12회 국제 직업능력 올림피아드 / 2025.09.20~09.25 / 독일 프랑크푸르트, 메세 프랑크푸르트 / 종합 5위 (금 1, 은 3, 동 4) / 선수 18명, 임원 6명
+3. 2025 한중일 인재교류 대회 / 2025.07.08~07.10 / 중국 베이징, 국가회의중심 / 종합 우승 (금 5, 은 2, 동 1) / 선수 16명, 임원 5명
+4. 제8회 동남아시아 기술교류전 / 2025.05.12~05.14 / 베트남 호치민, 사이공 컨벤션센터 / 종합 3위 (금 2, 은 4, 동 3) / 선수 20명, 임원 7명
+5. 2024 세계 인재개발 포럼 경진부문 / 2024.10.22~10.26 / 프랑스 파리, 팔레 데 콩그레 / 종합 4위 (금 2, 은 3, 동 5) / 선수 22명, 임원 8명
+
+총 메달 현황: 금메달 13개, 은메달 17개, 동메달 15개`;
+
+  const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
   const [editContent, setEditContent] = useState("");
   const [saving, setSaving] = useState(false);

@@ -28,7 +28,9 @@ export default function EventSchedulePage() {
   const [loading, setLoading] = useState(true);
 
   // Admin editing state
-  const [content, setContent] = useState("");
+  const fallbackContent = `한국유소년체스연맹에서 주최하는 행사 및 대회 일정을 확인하세요.`;
+
+  const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
   const [editContent, setEditContent] = useState("");
   const [saving, setSaving] = useState(false);

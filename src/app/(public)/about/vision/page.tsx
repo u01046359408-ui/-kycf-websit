@@ -53,7 +53,27 @@ export default function VisionPage() {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
 
-  const [content, setContent] = useState("");
+  const fallbackContent = `[비전]
+사람의 가치를 높이는 대한민국 인재 플랫폼
+
+한국유소년체스연맹는 모든 사람이 자신의 잠재력을 발휘할 수 있도록 교육과 인증의 기회를 제공하며, 대한민국 인재 생태계의 중심이 되겠습니다.
+
+[미션]
+한국유소년체스연맹가 추구하는 세 가지 핵심 가치
+
+인재 양성 - 체계적인 교육 프로그램을 통해 산업 현장에서 필요로 하는 전문 인력을 양성합니다.
+공정한 인증 - 투명하고 신뢰할 수 있는 자격 인증 체계를 운영하여 개인의 전문성을 객관적으로 검증합니다.
+사회 공헌 - 소외 계층을 위한 교육 지원과 지역 사회 발전에 기여하며, 모두가 성장할 수 있는 환경을 만듭니다.
+
+[전략 목표]
+2025년까지의 주요 달성 목표
+
+2025년 자격 인증 15만 건 달성 - 지속적인 시험 과목 확대와 응시자 편의성 향상
+교육 프로그램 50종 이상 운영 - AI, 빅데이터, 그린에너지 등 미래 산업 분야 교육 확대
+전국 10개 교육센터 확보 - 수도권 외 지방 접근성 향상을 위한 인프라 확충
+해외 5개국 협력 네트워크 구축 - 아시아 중심의 글로벌 인재 교류 프로그램 운영`;
+
+  const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
   const [editContent, setEditContent] = useState("");
   const [saving, setSaving] = useState(false);

@@ -9,7 +9,24 @@ export default function LocationPage() {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
 
-  const [content, setContent] = useState("");
+  const fallbackContent = `[연락처 정보]
+주소: (04524) 서울특별시 중구 세종대로 110, 한국유소년체스연맹빌딩 8층
+대표전화: 02-1234-5678
+팩스: 02-1234-5679
+이메일: info@daehantalent.kr
+
+[교통 안내]
+지하철
+- 2호선 시청역 10번 출구 도보 5분
+- 1호선 시청역 3번 출구 도보 7분
+- 5호선 광화문역 5번 출구 도보 10분
+
+버스
+- 간선: 101, 103, 150, 402, 604
+- 지선: 7017, 7021
+* 시청앞·덕수궁 정류장 하차`;
+
+  const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
   const [editContent, setEditContent] = useState("");
   const [saving, setSaving] = useState(false);

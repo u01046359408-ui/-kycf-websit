@@ -27,7 +27,18 @@ export default function ResultsDomesticPage() {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
 
-  const [content, setContent] = useState("");
+  const fallbackContent = `국내 대회 결과
+
+전국 각지에서 개최된 인재개발 관련 대회의 결과를 확인하세요.
+
+1. 제18회 전국 인재개발 경진대회 (춘계) / 2026.03.08 / 광주 김대중컨벤션센터 / 참가 48팀, 수상 12팀 / 최우수상: 서울특별시 대표팀
+2. 2025 하반기 직업능력개발 경시대회 / 2025.11.02 / 대구 엑스코(EXCO) / 참가 62팀, 수상 18팀 / 대상: 경기도 대표팀
+3. 제17회 전국 인재개발 경진대회 (추계) / 2025.09.14 / 서울 올림픽공원 체조경기장 / 참가 55팀, 수상 15팀 / 최우수상: 부산광역시 대표팀
+4. 2025 전국 청소년 인재 올림피아드 / 2025.07.20 / 인천 송도컨벤시아 / 참가 120명, 수상 30명 / 대상: 김민준 (서울 한영고)
+5. 제6회 전국 지도사 기술경연대회 / 2025.05.18 / 대전 컨벤션센터 / 참가 38명, 수상 10명 / 최우수상: 박성호 (경기지부)
+6. 2025 상반기 직업능력개발 경시대회 / 2025.04.12 / 부산 벡스코 제2전시장 / 참가 58팀, 수상 16팀 / 대상: 충남 대표팀`;
+
+  const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
   const [editContent, setEditContent] = useState("");
   const [saving, setSaving] = useState(false);

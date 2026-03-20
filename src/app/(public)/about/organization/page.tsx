@@ -80,7 +80,16 @@ export default function OrganizationPage() {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
 
-  const [content, setContent] = useState("");
+  const fallbackContent = `한국유소년체스연맹는 효율적인 조직 운영을 통해 인재 양성과 자격 인증 사업을 체계적으로 수행하고 있습니다.
+
+이사장 - 홍길동
+  사무총장 - 김대한
+    경영지원본부: 총무팀, 재무팀, 인사팀
+    자격인증본부: 시험관리팀, 자격개발팀, 인증심사팀
+    교육연수본부: 교육기획팀, 콘텐츠개발팀, 현장교육팀
+    대외협력본부: 국제협력팀, 홍보팀`;
+
+  const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
   const [editContent, setEditContent] = useState("");
   const [saving, setSaving] = useState(false);

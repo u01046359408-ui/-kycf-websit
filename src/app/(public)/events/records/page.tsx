@@ -32,7 +32,29 @@ export default function RecordsPage() {
 
   const years = [...new Set(records.map((r) => r.year))];
 
-  const [content, setContent] = useState("");
+  const fallbackContent = `역대 대회 기록
+
+한국유소년체스연맹 주최/참가 대회의 주요 수상 기록을 아카이브합니다.
+
+2026년
+- 제18회 전국 인재개발 경진대회 / 직업능력개발 / 이정우 (서울특별시 대표) / 대상 (국무총리상)
+
+2025년
+- 제17회 전국 인재개발 경진대회 / 직업능력개발 / 김하늘 (부산광역시 대표) / 대상 (국무총리상)
+- 2025 아시아 인재개발 챔피언십 / 기술혁신 / 박지민 (경기도 대표) / 금메달
+
+2024년
+- 제16회 전국 인재개발 경진대회 / 직업능력개발 / 최서윤 (대전광역시 대표) / 대상 (국무총리상)
+- 2024 세계 인재개발 포럼 경진부문 / 국제교류 / 정민호 (충남 대표) / 금메달
+
+2023년
+- 제15회 전국 인재개발 경진대회 / 직업능력개발 / 한소희 (인천광역시 대표) / 대상 (국무총리상)
+- 제6회 한중일 인재교류 대회 / 국제교류 / 오현수 (서울특별시 대표) / 종합 우승
+
+2022년
+- 제14회 전국 인재개발 경진대회 / 직업능력개발 / 윤태양 (경기도 대표) / 대상 (국무총리상)`;
+
+  const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
   const [editContent, setEditContent] = useState("");
   const [saving, setSaving] = useState(false);
