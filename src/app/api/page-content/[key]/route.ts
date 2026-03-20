@@ -17,20 +17,18 @@ export async function GET(
       .eq("page_key", key)
       .single();
 
-    if (error) {
-      return NextResponse.json({ error: "Page not found" }, { status: 404 });
+    if (error || !data) {
+      // DB에 없으면 빈 데이터 반환 (404 대신)
+      return NextResponse.json({ page_key: key, title: "", content: "", metadata: {} });
     }
 
     return NextResponse.json(data);
   } catch {
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ page_key: "", title: "", content: "", metadata: {} });
   }
 }
 
-// PUT: Admin only - update page content
+// PUT: Admin only - upsert page content (없으면 생성, 있으면 수정)
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ key: string }> }
@@ -43,22 +41,26 @@ export async function PUT(
     const body = await request.json();
     const { title, content, metadata } = body;
 
-    const updateData: Record<string, unknown> = {};
-    if (title !== undefined) updateData.title = title;
-    if (content !== undefined) updateData.content = content;
-    if (metadata !== undefined) updateData.metadata = metadata;
-    updateData.updated_by = user!.id;
-
+    // upsert: 있으면 업데이트, 없으면 생성
     const { data, error } = await supabase!
       .from("page_contents")
-      .update(updateData)
-      .eq("page_key", key)
+      .upsert(
+        {
+          page_key: key,
+          title: title || key,
+          content: content || "",
+          metadata: metadata || {},
+          updated_by: user!.id,
+        },
+        { onConflict: "page_key" }
+      )
       .select()
       .single();
 
     if (error) {
+      console.error("Page content upsert error:", error);
       return NextResponse.json(
-        { error: "Failed to update page content" },
+        { error: "저장에 실패했습니다: " + error.message },
         { status: 500 }
       );
     }
@@ -66,7 +68,7 @@ export async function PUT(
     return NextResponse.json(data);
   } catch {
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "서버 오류가 발생했습니다." },
       { status: 500 }
     );
   }
