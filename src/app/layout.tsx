@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import SupabaseWarmup from "@/components/ui/SupabaseWarmup";
 
 // 모든 페이지를 동적 렌더링으로 강제 (빌드 시 정적 생성 안 함)
 export const dynamic = "force-dynamic";
@@ -17,7 +18,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <SupabaseWarmup />
+        {children}
+      </body>
     </html>
   );
 }
