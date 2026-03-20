@@ -19,6 +19,17 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.next();
   }
 
+  const pathname = request.nextUrl.pathname;
+
+  // 보호가 필요 없는 공개 페이지는 Supabase 호출 없이 바로 통과 (속도 개선)
+  const isProtectedRoute = PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
+  const isAdminRoute = ADMIN_ROUTES.some((route) => pathname.startsWith(route));
+  const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
+
+  if (!isProtectedRoute && !isAdminRoute && !isAuthRoute) {
+    return NextResponse.next();
+  }
+
   try {
     let supabaseResponse = NextResponse.next({ request });
 
@@ -53,13 +64,7 @@ export async function updateSession(request: NextRequest) {
       return supabaseResponse;
     }
 
-    const pathname = request.nextUrl.pathname;
-
-    // 보호된 라우트 체크
-    const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
-      pathname.startsWith(route)
-    );
-
+    // 보호된 라우트 체크 (pathname, isProtectedRoute 등은 위에서 이미 선언됨)
     if (isProtectedRoute && !user) {
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("redirect", pathname);
@@ -67,10 +72,6 @@ export async function updateSession(request: NextRequest) {
     }
 
     // 관리자 라우트 체크
-    const isAdminRoute = ADMIN_ROUTES.some((route) =>
-      pathname.startsWith(route)
-    );
-
     if (isAdminRoute) {
       if (pathname === "/admin/setup") {
         if (!user) {
@@ -104,10 +105,6 @@ export async function updateSession(request: NextRequest) {
     }
 
     // 인증 라우트 체크
-    const isAuthRoute = AUTH_ROUTES.some((route) =>
-      pathname.startsWith(route)
-    );
-
     if (isAuthRoute && user) {
       return NextResponse.redirect(new URL("/", request.url));
     }
