@@ -32,32 +32,7 @@ export default function RefereeCoursePage() {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
 
-  const fallbackContent = `심판 양성과정
-
-한국유소년체스연맹 심판 양성과정은 공정하고 전문적인 대회 운영을 위한 심판 인력을 체계적으로 양성합니다. 급수별 단계적 교육을 통해 시/도 대회부터 국제 대회까지 활동할 수 있는 자격을 부여합니다.
-
-심판 등급 안내:
-- 3급 심판: 시/도 단위 대회 심판 자격 / 60시간 (3주) / 400,000원 / 만 20세 이상, 관련 분야 기본 지식 보유자
-- 2급 심판: 전국 단위 대회 심판 자격 / 80시간 (4주) / 550,000원 / 3급 심판 자격 취득 후 1년 이상 경력자
-- 1급 심판: 국제 대회 심판 자격 / 100시간 (5주) / 700,000원 / 2급 심판 자격 취득 후 2년 이상 경력자
-
-교육과정 (3급 기준, 총 100시간):
-* 2급/1급 과정은 심화 내용이 추가됩니다.
-- 심판학 개론: 8시간 / 심판의 역할, 윤리, 책임에 대한 이론 교육
-- 경기 규정 및 규칙: 16시간 / 각 종목별 경기 규정의 이해와 적용
-- 판정 실무: 20시간 / 정확한 판정 기법 및 판정 기준 실습
-- 영상 분석 및 기록: 12시간 / 경기 영상 분석 및 기록 관리 방법
-- 갈등 관리 및 커뮤니케이션: 8시간 / 선수/코치와의 효과적인 소통 방법
-- 현장 실습: 24시간 / 실제 대회 현장에서의 심판 실습
-- 종합평가: 12시간 / 필기 및 실기 종합 평가
-
-2026년 교육일정:
-- 3급 제1기: 2026.04.14 ~ 2026.05.02 / 3급 / 25명 / 접수중
-- 2급 제1기: 2026.05.11 ~ 2026.06.06 / 2급 / 20명 / 예정
-- 3급 제2기: 2026.07.13 ~ 2026.07.31 / 3급 / 25명 / 예정
-- 1급 제1기: 2026.09.07 ~ 2026.10.10 / 1급 / 15명 / 예정
-
-문의전화: 02-1234-5678 (평일 09:00~18:00)`;
+  const fallbackContent = `한국유소년체스연맹 심판 양성과정은 공정하고 전문적인 대회 운영을 위한 심판 인력을 체계적으로 양성합니다. 급수별 단계적 교육을 통해 시/도 대회부터 국제 대회까지 활동할 수 있는 자격을 부여합니다.`;
 
   const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
@@ -69,7 +44,7 @@ export default function RefereeCoursePage() {
     fetch("/api/page-content/referee")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data?.content && data.content.trim()) setContent(data.content);
+        if (data?.content && data.content.trim() && data.content.length <= 500) setContent(data.content);
       })
       .catch(() => {});
   }, []);
@@ -84,21 +59,15 @@ export default function RefereeCoursePage() {
     } catch { alert("저장에 실패했습니다."); } finally { setSaving(false); }
   };
 
-  const renderApiContent = () => (
-    <div className="max-w-3xl mx-auto">
-      <div className="prose prose-invert max-w-none">
-        {content.split(/\n\n+/).map((paragraph, idx) => (
-          <p key={idx} className="text-gray-300 leading-relaxed whitespace-pre-line">{paragraph}</p>
-        ))}
-      </div>
-    </div>
-  );
-
   const renderDefaultContent = () => (
     <>
       <div className="mb-12">
         <h2 className="text-2xl font-bold text-white mb-2">심판 <span className="text-[#c9a84c]">양성과정</span></h2>
-        <p className="text-gray-400 leading-relaxed max-w-3xl">한국유소년체스연맹 심판 양성과정은 공정하고 전문적인 대회 운영을 위한 심판 인력을 체계적으로 양성합니다. 급수별 단계적 교육을 통해 시/도 대회부터 국제 대회까지 활동할 수 있는 자격을 부여합니다.</p>
+        <div className="text-gray-400 leading-relaxed max-w-3xl space-y-3">
+          {content.split(/\n\n+/).filter(p => p.trim()).map((paragraph, idx) => (
+            <p key={idx} className="whitespace-pre-line">{paragraph}</p>
+          ))}
+        </div>
       </div>
 
       {/* Level Cards */}
@@ -199,7 +168,7 @@ export default function RefereeCoursePage() {
               <button onClick={cancelEdit} className="flex items-center gap-2 px-6 py-2.5 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors"><X className="w-4 h-4" />취소</button>
             </div>
           </div>
-        ) : content ? renderApiContent() : renderDefaultContent()}
+        ) : renderDefaultContent()}
       </div>
     </>
   );

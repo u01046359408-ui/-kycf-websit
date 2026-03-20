@@ -9,22 +9,7 @@ export default function LocationPage() {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
 
-  const fallbackContent = `[연락처 정보]
-주소: (04524) 서울특별시 중구 세종대로 110, 한국유소년체스연맹빌딩 8층
-대표전화: 02-1234-5678
-팩스: 02-1234-5679
-이메일: info@daehantalent.kr
-
-[교통 안내]
-지하철
-- 2호선 시청역 10번 출구 도보 5분
-- 1호선 시청역 3번 출구 도보 7분
-- 5호선 광화문역 5번 출구 도보 10분
-
-버스
-- 간선: 101, 103, 150, 402, 604
-- 지선: 7017, 7021
-* 시청앞·덕수궁 정류장 하차`;
+  const fallbackContent = `한국유소년체스연맹 본부 위치 및 교통 안내입니다.`;
 
   const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
@@ -36,7 +21,7 @@ export default function LocationPage() {
     fetch("/api/page-content/location")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data?.content && data.content.trim()) {
+        if (data?.content && data.content.trim() && data.content.length <= 500) {
           setContent(data.content);
         }
       })
@@ -74,20 +59,14 @@ export default function LocationPage() {
     }
   };
 
-  const renderApiContent = () => (
-    <div className="max-w-3xl mx-auto">
-      <div className="prose prose-invert max-w-none">
-        {content.split(/\n\n+/).map((paragraph, idx) => (
-          <p key={idx} className="text-gray-300 leading-relaxed whitespace-pre-line">
-            {paragraph}
-          </p>
-        ))}
-      </div>
-    </div>
-  );
-
   const renderDefaultContent = () => (
     <div className="space-y-12">
+      <div className="text-center text-gray-400 mb-8 max-w-2xl mx-auto leading-relaxed space-y-3">
+        {content.split(/\n\n+/).filter(p => p.trim()).map((paragraph, idx) => (
+          <p key={idx} className="whitespace-pre-line">{paragraph}</p>
+        ))}
+      </div>
+
       {/* Map placeholder */}
       <div className="w-full h-[400px] rounded-2xl bg-[#1a2744] border border-white/10 flex items-center justify-center">
         <div className="text-center">
@@ -255,8 +234,6 @@ export default function LocationPage() {
               </button>
             </div>
           </div>
-        ) : content ? (
-          renderApiContent()
         ) : (
           renderDefaultContent()
         )}

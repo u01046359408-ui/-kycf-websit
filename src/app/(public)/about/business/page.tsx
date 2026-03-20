@@ -40,31 +40,7 @@ export default function BusinessPage() {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
 
-  const fallbackContent = `한국유소년체스연맹는 인재 양성의 전 과정을 아우르는 4대 핵심 사업을 운영하고 있습니다.
-
-자격 인증 사업
-산업 현장에서 요구되는 전문 자격 시험을 개발하고 운영합니다. 공정하고 투명한 평가 체계를 통해 개인의 역량을 객관적으로 인증하며, 국가공인 민간자격 및 등록 민간자격을 포함한 다양한 자격 종목을 관리합니다.
-- 국가공인 민간자격 운영
-- CBT 시험 시스템
-- 자격증 발급 및 관리
-
-교육 연수 사업
-직무 능력 향상을 위한 전문 교육 과정을 설계하고 운영합니다. 온라인과 오프라인을 아우르는 블렌디드 러닝 방식을 채택하여 시간과 장소에 구애받지 않는 학습 환경을 제공합니다.
-- 직무 전문 교육
-- 온·오프라인 통합 과정
-- 맞춤형 기업 연수
-
-산학 협력 사업
-대학, 기업, 정부 기관과의 협력을 통해 산업 현장이 필요로 하는 인재를 양성합니다. 취업 연계 프로그램과 인턴십을 운영하여 청년 일자리 창출에 기여합니다.
-- 산학 연계 프로그램
-- 취업 지원 서비스
-- 기업 맞춤형 인재 추천
-
-연구 개발 사업
-미래 산업에 대응하는 교육 콘텐츠와 평가 도구를 연구·개발합니다. AI, 빅데이터 등 신기술 분야의 자격 체계 개발과 교육 방법론 혁신에 앞장서고 있습니다.
-- 교육 콘텐츠 R&D
-- 평가 도구 개발
-- 신기술 자격 체계 연구`;
+  const fallbackContent = `한국유소년체스연맹는 인재 양성의 전 과정을 아우르는 4대 핵심 사업을 운영하고 있습니다.`;
 
   const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
@@ -76,7 +52,7 @@ export default function BusinessPage() {
     fetch("/api/page-content/business")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data?.content && data.content.trim()) {
+        if (data?.content && data.content.trim() && data.content.length <= 500) {
           setContent(data.content);
         }
       })
@@ -114,24 +90,13 @@ export default function BusinessPage() {
     }
   };
 
-  const renderApiContent = () => (
-    <div className="max-w-3xl mx-auto">
-      <div className="prose prose-invert max-w-none">
-        {content.split(/\n\n+/).map((paragraph, idx) => (
-          <p key={idx} className="text-gray-300 leading-relaxed whitespace-pre-line">
-            {paragraph}
-          </p>
-        ))}
-      </div>
-    </div>
-  );
-
   const renderDefaultContent = () => (
     <>
-      <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
-        한국유소년체스연맹는 인재 양성의 전 과정을 아우르는 4대 핵심 사업을 운영하고
-        있습니다.
-      </p>
+      <div className="text-center text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed space-y-3">
+        {content.split(/\n\n+/).filter(p => p.trim()).map((paragraph, idx) => (
+          <p key={idx} className="whitespace-pre-line">{paragraph}</p>
+        ))}
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {businesses.map((biz) => (
@@ -223,8 +188,6 @@ export default function BusinessPage() {
               </button>
             </div>
           </div>
-        ) : content ? (
-          renderApiContent()
         ) : (
           renderDefaultContent()
         )}

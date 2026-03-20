@@ -16,34 +16,7 @@ export default function SupportPage() {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
 
-  const fallbackContent = `한국유소년체스연맹와 함께해 주세요
-
-(사)한국유소년체스연맹은 대한민국 인재 양성과 직업능력 개발을 위해 노력하고 있습니다. 여러분의 소중한 후원은 청년 취업 지원, 소외 계층 직업교육, 자격검정 제도 발전에 사용됩니다. 작은 관심이 큰 변화를 만듭니다.
-
-후원 방법
-
-정기 후원
-매월 일정 금액을 자동이체로 후원하실 수 있습니다. 정기 후원자에게는 연말정산용 기부금 영수증을 일괄 발급해 드립니다. 월 1만원부터 참여 가능합니다.
-
-일시 후원
-원하시는 금액을 1회 후원하실 수 있습니다. 아래 계좌로 입금 후 사무국으로 연락 주시면 기부금 영수증을 발급해 드립니다.
-
-후원 계좌 안내
-은행명: 국민은행
-계좌번호: 123-456-789012
-예금주: (사)한국유소년체스연맹
-입금 시 참고: 성함 + "후원"
-
-후원자 혜택
-01. 세금 혜택 - 후원금은 소득세법에 따라 기부금 세액공제 혜택을 받으실 수 있습니다.
-02. 후원 감사장 - 연간 100만원 이상 후원 시 한국유소년체스연맹 이사장 명의의 감사장을 수여합니다.
-03. 행사 초청 - 주요 행사 및 포럼에 VIP로 초청되어 네트워킹 기회를 제공받습니다.
-04. 소식지 발송 - 분기별 한국유소년체스연맹 소식지 및 연간 보고서를 받아보실 수 있습니다.
-
-후원 문의
-담당부서: 사무국 후원팀
-전화번호: 02-1234-5678
-이메일: support@daehantalent.or.kr`;
+  const fallbackContent = `(사)한국유소년체스연맹은 대한민국 인재 양성과 직업능력 개발을 위해 노력하고 있습니다. 여러분의 소중한 후원은 청년 취업 지원, 소외 계층 직업교육, 자격검정 제도 발전에 사용됩니다. 작은 관심이 큰 변화를 만듭니다.`;
 
   const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
@@ -55,7 +28,7 @@ export default function SupportPage() {
     fetch("/api/page-content/support")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data?.content && data.content.trim()) setContent(data.content);
+        if (data?.content && data.content.trim() && data.content.length <= 500) setContent(data.content);
       })
       .catch(() => {});
   }, []);
@@ -70,19 +43,17 @@ export default function SupportPage() {
     } catch { alert("저장에 실패했습니다."); } finally { setSaving(false); }
   };
 
-  const renderApiContent = () => (
-    <div className="max-w-3xl mx-auto"><div className="prose prose-invert max-w-none">{content.split(/\n\n+/).map((p, i) => <p key={i} className="text-gray-300 leading-relaxed whitespace-pre-line">{p}</p>)}</div></div>
-  );
-
   const renderDefaultContent = () => (
     <div className="space-y-16">
       {/* Introduction */}
       <section className="text-center max-w-3xl mx-auto">
         <h2 className="text-2xl font-bold text-white mb-4">한국유소년체스연맹와 <span className="text-[#c9a84c]">함께</span>해 주세요</h2>
         <div className="w-16 h-0.5 bg-[#c9a84c] rounded-full mx-auto mb-6" />
-        <p className="text-gray-300 leading-relaxed">
-          (사)한국유소년체스연맹은 대한민국 인재 양성과 직업능력 개발을 위해 노력하고 있습니다. 여러분의 소중한 후원은 청년 취업 지원, 소외 계층 직업교육, 자격검정 제도 발전에 사용됩니다. 작은 관심이 큰 변화를 만듭니다.
-        </p>
+        <div className="text-gray-300 leading-relaxed space-y-3">
+          {content.split(/\n\n+/).filter(p => p.trim()).map((paragraph, idx) => (
+            <p key={idx} className="whitespace-pre-line">{paragraph}</p>
+          ))}
+        </div>
       </section>
 
       {/* How to Support */}
@@ -160,7 +131,7 @@ export default function SupportPage() {
               <button onClick={cancelEdit} className="flex items-center gap-2 px-6 py-2.5 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors"><X className="w-4 h-4" />취소</button>
             </div>
           </div>
-        ) : content ? renderApiContent() : renderDefaultContent()}
+        ) : renderDefaultContent()}
       </div>
     </>
   );

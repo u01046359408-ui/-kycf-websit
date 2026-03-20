@@ -22,15 +22,7 @@ export default function ShopPage() {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
 
-  const fallbackContent = `한국유소년체스연맹 공식 교재 및 자격검정 관련 상품을 구매하실 수 있습니다.
-
-상품 목록:
-1. 자격검정 공식 교재 (AI데이터분석사) - 35,000원
-2. 직업능력개발 실무 핸드북 - 28,000원
-3. 자격증 액자 (고급 원목 프레임) - 45,000원
-4. 한국유소년체스연맹 공식 수험서 세트 (3권) - 89,000원
-5. 온라인 강의 수강권 (6개월) - 150,000원
-6. 자격시험 모의고사 문제집 - 22,000원`;
+  const fallbackContent = `한국유소년체스연맹 공식 교재 및 자격검정 관련 상품을 구매하실 수 있습니다.`;
 
   const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
@@ -42,7 +34,7 @@ export default function ShopPage() {
     fetch("/api/page-content/shop")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data?.content && data.content.trim()) setContent(data.content);
+        if (data?.content && data.content.trim() && data.content.length <= 500) setContent(data.content);
       })
       .catch(() => {});
   }, []);
@@ -57,13 +49,13 @@ export default function ShopPage() {
     } catch { alert("저장에 실패했습니다."); } finally { setSaving(false); }
   };
 
-  const renderApiContent = () => (
-    <div className="max-w-3xl mx-auto"><div className="prose prose-invert max-w-none">{content.split(/\n\n+/).map((p, i) => <p key={i} className="text-gray-300 leading-relaxed whitespace-pre-line">{p}</p>)}</div></div>
-  );
-
   const renderDefaultContent = () => (
     <>
-      <p className="text-gray-400 text-sm mb-8">한국유소년체스연맹 공식 교재 및 자격검정 관련 상품을 구매하실 수 있습니다.</p>
+      <div className="text-gray-400 text-sm mb-8 space-y-3">
+        {content.split(/\n\n+/).filter(p => p.trim()).map((paragraph, idx) => (
+          <p key={idx} className="whitespace-pre-line">{paragraph}</p>
+        ))}
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map((product) => (
           <div key={product.id} className="rounded-2xl bg-[#111d35] border border-white/10 overflow-hidden hover:border-[#c9a84c]/30 transition-all duration-300 group">
@@ -103,7 +95,7 @@ export default function ShopPage() {
               <button onClick={cancelEdit} className="flex items-center gap-2 px-6 py-2.5 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors"><X className="w-4 h-4" />취소</button>
             </div>
           </div>
-        ) : content ? renderApiContent() : renderDefaultContent()}
+        ) : renderDefaultContent()}
       </div>
     </>
   );

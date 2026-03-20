@@ -25,39 +25,7 @@ export default function InstructorCoursePage() {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
 
-  const fallbackContent = `지도사 양성과정
-
-한국유소년체스연맹 지도사 양성과정은 인재개발 분야의 전문 지도 인력을 양성하기 위한 체계적인 교육 프로그램입니다. 총 100시간의 이론 및 실습 교육을 통해 현장에서 즉시 활동할 수 있는 역량을 갖춘 지도사를 배출합니다.
-
-지원 자격요건:
-- 만 18세 이상의 대한민국 국민
-- 고등학교 졸업 이상의 학력 소지자
-- 관련 분야 1년 이상 실무 경력자 우대
-- 신체 건강하며 교육 전 과정 참여 가능자
-- 본 원 회원 가입자 (비회원 시 동시 접수 가능)
-- 결격사유가 없는 자
-
-교육과정 (총 100시간):
-- 인재개발론: 12시간 / 인재개발의 이론적 기초와 역사적 발전과정
-- 교수학습방법론: 16시간 / 효과적인 교수법 및 학습 촉진 기법
-- 직업능력개발 실무: 20시간 / 현장 맞춤형 직업능력개발 실습
-- 평가 및 자격인증: 12시간 / 역량 평가 체계 및 자격인증 절차
-- 리더십과 소통: 8시간 / 팀 리더십, 코칭, 커뮤니케이션 스킬
-- 현장실습: 24시간 / 실무 현장에서의 지도 실습 및 피드백
-- 종합평가: 8시간 / 필기시험 및 실기시험
-
-2026년 교육일정:
-- 제1기: 2026.04.07 ~ 2026.05.16 / 30명 / 접수중
-- 제2기: 2026.07.06 ~ 2026.08.14 / 30명 / 예정
-- 제3기: 2026.10.05 ~ 2026.11.13 / 30명 / 예정
-
-교육비 안내:
-- 교육비: 550,000원
-- 교재비: 50,000원
-- 자격시험 응시료: 100,000원
-* 교육비는 입금 후 교육 시작 7일 전까지 전액 환불 가능합니다. 교육 시작 후에는 환불이 불가합니다.
-
-문의전화: 02-1234-5678 (평일 09:00~18:00)`;
+  const fallbackContent = `한국유소년체스연맹 지도사 양성과정은 인재개발 분야의 전문 지도 인력을 양성하기 위한 체계적인 교육 프로그램입니다. 총 100시간의 이론 및 실습 교육을 통해 현장에서 즉시 활동할 수 있는 역량을 갖춘 지도사를 배출합니다.`;
 
   const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
@@ -69,7 +37,7 @@ export default function InstructorCoursePage() {
     fetch("/api/page-content/instructor")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data?.content && data.content.trim()) setContent(data.content);
+        if (data?.content && data.content.trim() && data.content.length <= 500) setContent(data.content);
       })
       .catch(() => {});
   }, []);
@@ -84,16 +52,6 @@ export default function InstructorCoursePage() {
     } catch { alert("저장에 실패했습니다."); } finally { setSaving(false); }
   };
 
-  const renderApiContent = () => (
-    <div className="max-w-3xl mx-auto">
-      <div className="prose prose-invert max-w-none">
-        {content.split(/\n\n+/).map((paragraph, idx) => (
-          <p key={idx} className="text-gray-300 leading-relaxed whitespace-pre-line">{paragraph}</p>
-        ))}
-      </div>
-    </div>
-  );
-
   const renderDefaultContent = () => (
     <>
       {/* Overview */}
@@ -101,11 +59,11 @@ export default function InstructorCoursePage() {
         <h2 className="text-2xl font-bold text-white mb-2">
           지도사 <span className="text-[#c9a84c]">양성과정</span>
         </h2>
-        <p className="text-gray-400 leading-relaxed max-w-3xl">
-          한국유소년체스연맹 지도사 양성과정은 인재개발 분야의 전문 지도 인력을 양성하기 위한
-          체계적인 교육 프로그램입니다. 총 100시간의 이론 및 실습 교육을 통해 현장에서
-          즉시 활동할 수 있는 역량을 갖춘 지도사를 배출합니다.
-        </p>
+        <div className="text-gray-400 leading-relaxed max-w-3xl space-y-3">
+          {content.split(/\n\n+/).filter(p => p.trim()).map((paragraph, idx) => (
+            <p key={idx} className="whitespace-pre-line">{paragraph}</p>
+          ))}
+        </div>
       </div>
 
       {/* Requirements */}
@@ -208,7 +166,7 @@ export default function InstructorCoursePage() {
               <button onClick={cancelEdit} className="flex items-center gap-2 px-6 py-2.5 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors"><X className="w-4 h-4" />취소</button>
             </div>
           </div>
-        ) : content ? renderApiContent() : renderDefaultContent()}
+        ) : renderDefaultContent()}
       </div>
     </>
   );

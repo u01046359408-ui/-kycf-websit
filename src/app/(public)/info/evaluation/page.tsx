@@ -40,42 +40,7 @@ export default function EvaluationPage() {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
 
-  const fallbackContent = `평가 절차
-
-한국유소년체스연맹 인증 평가는 총 6단계로 구성되며, 각 단계는 공정하고 투명한 기준에 따라 진행됩니다.
-
-1. 지원서 제출 (접수 기간 내) - 온라인 시스템을 통해 지원서와 필수 서류를 제출합니다. 학력증명서, 경력증명서, 자기소개서 등이 필요합니다.
-2. 서류 심사 (약 2주 소요) - 제출된 서류를 전문 심사위원이 검토합니다. 기본 자격 요건 충족 여부와 지원 분야 적합성을 확인합니다.
-3. 필기 평가 (시험일 당일, 120분) - 해당 분야의 이론적 지식과 전문 역량을 평가하는 필기시험을 실시합니다. 객관식과 서술형 문항으로 구성됩니다.
-4. 실기 평가 (시험일 당일, 180분) - 실무 능력을 직접 평가합니다. 분야별 과제를 수행하며, 문제 해결 능력과 창의성을 종합적으로 심사합니다.
-5. 면접 심사 (1인당 약 20분) - 전문 심사위원단과의 면접을 통해 인성, 전문성, 발전 가능성을 종합적으로 평가합니다.
-6. 최종 판정 및 인증 (결과 발표 약 4주 후) - 모든 평가 결과를 종합하여 최종 인증 여부와 등급을 결정합니다. 합격자에게는 인증서가 발급됩니다.
-
-평가 기준
-
-각 평가 항목별 배점 비율과 합격 기준:
-- 서류 심사: 10% / 학력, 경력, 교육이수, 자격증 보유 현황 / 적격·부적격
-- 필기 평가: 30% / 전공 이론, 시사 상식, 분야별 전문 지식 / 60점 이상
-- 실기 평가: 40% / 실무 수행 능력, 문제 해결력, 창의성, 완성도 / 70점 이상
-- 면접 심사: 20% / 인성, 전문성, 의사소통 능력, 발전 가능성 / 60점 이상
-- 합계: 100% / 전 항목 종합 평가 / 총점 65점 이상
-
-* 서류 심사는 적격/부적격으로 판정하며, 부적격 판정 시 이후 평가에 참여할 수 없습니다. 필기, 실기, 면접은 각 항목별 합격 기준을 충족해야 하며, 하나의 항목이라도 기준 미달 시 불합격 처리됩니다.
-
-등급 체계
-
-총점에 따라 4개 등급으로 분류되며, 각 등급에 따른 인증서가 발급됩니다.
-
-전문가 (총점 95점 이상) - 해당 분야의 최고 수준의 역량을 갖춘 인재
-고급 (총점 85점 이상) - 높은 전문성과 실무 능력을 겸비한 인재
-중급 (총점 75점 이상) - 기본 역량을 갖추고 발전 가능성이 높은 인재
-초급 (총점 65점 이상) - 기초 지식과 기본 소양을 갖춘 인재
-
-유의사항:
-- 인증 유효기간은 발급일로부터 3년이며, 갱신 심사를 통해 연장할 수 있습니다.
-- 상위 등급으로의 승급 심사는 현 등급 취득 후 최소 1년이 경과한 후 신청 가능합니다.
-- 평가 결과에 이의가 있는 경우, 결과 발표 후 14일 이내에 이의신청을 할 수 있습니다.
-- 부정행위가 적발될 경우 인증이 취소되며, 향후 2년간 재응시가 제한됩니다.`;
+  const fallbackContent = `한국유소년체스연맹 인증 평가는 총 6단계로 구성되며, 각 단계는 공정하고 투명한 기준에 따라 진행됩니다.`;
 
   const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
@@ -87,7 +52,7 @@ export default function EvaluationPage() {
     fetch("/api/page-content/evaluation")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data?.content && data.content.trim()) {
+        if (data?.content && data.content.trim() && data.content.length <= 500) {
           setContent(data.content);
         }
       })
@@ -120,16 +85,6 @@ export default function EvaluationPage() {
     finally { setSaving(false); }
   };
 
-  const renderApiContent = () => (
-    <div className="max-w-3xl mx-auto">
-      <div className="prose prose-invert max-w-none">
-        {content.split(/\n\n+/).map((paragraph, idx) => (
-          <p key={idx} className="text-gray-300 leading-relaxed whitespace-pre-line">{paragraph}</p>
-        ))}
-      </div>
-    </div>
-  );
-
   const renderDefaultContent = () => (
     <>
       {/* Section 1: Step-by-step process */}
@@ -137,9 +92,11 @@ export default function EvaluationPage() {
         <div className="text-center mb-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">평가 절차</h2>
           <div className="w-12 h-0.5 bg-[#c9a84c] mx-auto mb-6" />
-          <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            한국유소년체스연맹 인증 평가는 총 6단계로 구성되며, 각 단계는 공정하고 투명한 기준에 따라 진행됩니다.
-          </p>
+          <div className="text-gray-400 max-w-2xl mx-auto leading-relaxed space-y-3">
+            {content.split(/\n\n+/).filter(p => p.trim()).map((paragraph, idx) => (
+              <p key={idx} className="whitespace-pre-line">{paragraph}</p>
+            ))}
+          </div>
         </div>
         <div className="space-y-4">
           {evaluationSteps.map((step) => (
@@ -270,7 +227,7 @@ export default function EvaluationPage() {
               </button>
             </div>
           </div>
-        ) : content ? renderApiContent() : renderDefaultContent()}
+        ) : renderDefaultContent()}
       </div>
     </>
   );

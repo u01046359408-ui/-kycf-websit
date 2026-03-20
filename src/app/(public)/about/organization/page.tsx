@@ -80,14 +80,7 @@ export default function OrganizationPage() {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
 
-  const fallbackContent = `한국유소년체스연맹는 효율적인 조직 운영을 통해 인재 양성과 자격 인증 사업을 체계적으로 수행하고 있습니다.
-
-이사장 - 홍길동
-  사무총장 - 김대한
-    경영지원본부: 총무팀, 재무팀, 인사팀
-    자격인증본부: 시험관리팀, 자격개발팀, 인증심사팀
-    교육연수본부: 교육기획팀, 콘텐츠개발팀, 현장교육팀
-    대외협력본부: 국제협력팀, 홍보팀`;
+  const fallbackContent = `한국유소년체스연맹는 효율적인 조직 운영을 통해 인재 양성과 자격 인증 사업을 체계적으로 수행하고 있습니다.`;
 
   const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
@@ -99,7 +92,7 @@ export default function OrganizationPage() {
     fetch("/api/page-content/organization")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data?.content && data.content.trim()) {
+        if (data?.content && data.content.trim() && data.content.length <= 500) {
           setContent(data.content);
         }
       })
@@ -139,24 +132,13 @@ export default function OrganizationPage() {
 
   const orgData = defaultOrgData;
 
-  const renderApiContent = () => (
-    <div className="max-w-3xl mx-auto">
-      <div className="prose prose-invert max-w-none">
-        {content.split(/\n\n+/).map((paragraph, idx) => (
-          <p key={idx} className="text-gray-300 leading-relaxed whitespace-pre-line">
-            {paragraph}
-          </p>
-        ))}
-      </div>
-    </div>
-  );
-
   const renderOrgChart = () => (
     <>
-      <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
-        한국유소년체스연맹는 효율적인 조직 운영을 통해 인재 양성과 자격 인증 사업을
-        체계적으로 수행하고 있습니다.
-      </p>
+      <div className="text-center text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed space-y-3">
+        {content.split(/\n\n+/).filter(p => p.trim()).map((paragraph, idx) => (
+          <p key={idx} className="whitespace-pre-line">{paragraph}</p>
+        ))}
+      </div>
 
       <div className="flex flex-col items-center overflow-x-auto pb-8">
         {/* Level 1: 이사장 */}
@@ -274,8 +256,6 @@ export default function OrganizationPage() {
               </button>
             </div>
           </div>
-        ) : content ? (
-          renderApiContent()
         ) : (
           renderOrgChart()
         )}

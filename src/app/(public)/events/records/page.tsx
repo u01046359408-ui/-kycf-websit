@@ -32,27 +32,7 @@ export default function RecordsPage() {
 
   const years = [...new Set(records.map((r) => r.year))];
 
-  const fallbackContent = `역대 대회 기록
-
-한국유소년체스연맹 주최/참가 대회의 주요 수상 기록을 아카이브합니다.
-
-2026년
-- 제18회 전국 인재개발 경진대회 / 직업능력개발 / 이정우 (서울특별시 대표) / 대상 (국무총리상)
-
-2025년
-- 제17회 전국 인재개발 경진대회 / 직업능력개발 / 김하늘 (부산광역시 대표) / 대상 (국무총리상)
-- 2025 아시아 인재개발 챔피언십 / 기술혁신 / 박지민 (경기도 대표) / 금메달
-
-2024년
-- 제16회 전국 인재개발 경진대회 / 직업능력개발 / 최서윤 (대전광역시 대표) / 대상 (국무총리상)
-- 2024 세계 인재개발 포럼 경진부문 / 국제교류 / 정민호 (충남 대표) / 금메달
-
-2023년
-- 제15회 전국 인재개발 경진대회 / 직업능력개발 / 한소희 (인천광역시 대표) / 대상 (국무총리상)
-- 제6회 한중일 인재교류 대회 / 국제교류 / 오현수 (서울특별시 대표) / 종합 우승
-
-2022년
-- 제14회 전국 인재개발 경진대회 / 직업능력개발 / 윤태양 (경기도 대표) / 대상 (국무총리상)`;
+  const fallbackContent = `한국유소년체스연맹 주최 각종 대회의 역대 수상 기록입니다.`;
 
   const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
@@ -64,7 +44,7 @@ export default function RecordsPage() {
     fetch("/api/page-content/records")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data?.content && data.content.trim()) setContent(data.content);
+        if (data?.content && data.content.trim() && data.content.length <= 500) setContent(data.content);
       })
       .catch(() => {});
   }, []);
@@ -79,15 +59,15 @@ export default function RecordsPage() {
     } catch { alert("저장에 실패했습니다."); } finally { setSaving(false); }
   };
 
-  const renderApiContent = () => (
-    <div className="max-w-3xl mx-auto"><div className="prose prose-invert max-w-none">{content.split(/\n\n+/).map((p, i) => <p key={i} className="text-gray-300 leading-relaxed whitespace-pre-line">{p}</p>)}</div></div>
-  );
-
   const renderDefaultContent = () => (
     <>
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-white">역대 대회 <span className="text-[#c9a84c]">기록</span></h2>
-        <p className="mt-2 text-gray-400">한국유소년체스연맹 주최/참가 대회의 주요 수상 기록을 아카이브합니다.</p>
+        <div className="mt-2 text-gray-400 space-y-3">
+          {content.split(/\n\n+/).filter(p => p.trim()).map((paragraph, idx) => (
+            <p key={idx} className="whitespace-pre-line">{paragraph}</p>
+          ))}
+        </div>
       </div>
       <div className="mb-8 flex flex-wrap gap-2">
         <button className="px-4 py-2 rounded-lg bg-[#c9a84c] text-[#0a1628] font-semibold text-sm">전체</button>
@@ -134,7 +114,7 @@ export default function RecordsPage() {
               <button onClick={cancelEdit} className="flex items-center gap-2 px-6 py-2.5 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors"><X className="w-4 h-4" />취소</button>
             </div>
           </div>
-        ) : content ? renderApiContent() : renderDefaultContent()}
+        ) : renderDefaultContent()}
       </div>
     </>
   );

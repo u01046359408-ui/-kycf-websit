@@ -27,16 +27,7 @@ export default function ResultsDomesticPage() {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
 
-  const fallbackContent = `국내 대회 결과
-
-전국 각지에서 개최된 인재개발 관련 대회의 결과를 확인하세요.
-
-1. 제18회 전국 인재개발 경진대회 (춘계) / 2026.03.08 / 광주 김대중컨벤션센터 / 참가 48팀, 수상 12팀 / 최우수상: 서울특별시 대표팀
-2. 2025 하반기 직업능력개발 경시대회 / 2025.11.02 / 대구 엑스코(EXCO) / 참가 62팀, 수상 18팀 / 대상: 경기도 대표팀
-3. 제17회 전국 인재개발 경진대회 (추계) / 2025.09.14 / 서울 올림픽공원 체조경기장 / 참가 55팀, 수상 15팀 / 최우수상: 부산광역시 대표팀
-4. 2025 전국 청소년 인재 올림피아드 / 2025.07.20 / 인천 송도컨벤시아 / 참가 120명, 수상 30명 / 대상: 김민준 (서울 한영고)
-5. 제6회 전국 지도사 기술경연대회 / 2025.05.18 / 대전 컨벤션센터 / 참가 38명, 수상 10명 / 최우수상: 박성호 (경기지부)
-6. 2025 상반기 직업능력개발 경시대회 / 2025.04.12 / 부산 벡스코 제2전시장 / 참가 58팀, 수상 16팀 / 대상: 충남 대표팀`;
+  const fallbackContent = `한국유소년체스연맹 주최 및 참가 국내 대회 결과입니다.`;
 
   const [content, setContent] = useState(fallbackContent);
   const [editing, setEditing] = useState(false);
@@ -48,7 +39,7 @@ export default function ResultsDomesticPage() {
     fetch("/api/page-content/results-domestic")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data?.content && data.content.trim()) setContent(data.content);
+        if (data?.content && data.content.trim() && data.content.length <= 500) setContent(data.content);
       })
       .catch(() => {});
   }, []);
@@ -63,15 +54,15 @@ export default function ResultsDomesticPage() {
     } catch { alert("저장에 실패했습니다."); } finally { setSaving(false); }
   };
 
-  const renderApiContent = () => (
-    <div className="max-w-3xl mx-auto"><div className="prose prose-invert max-w-none">{content.split(/\n\n+/).map((p, i) => <p key={i} className="text-gray-300 leading-relaxed whitespace-pre-line">{p}</p>)}</div></div>
-  );
-
   const renderDefaultContent = () => (
     <>
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-white">국내 대회 <span className="text-[#c9a84c]">결과</span></h2>
-        <p className="mt-2 text-gray-400">전국 각지에서 개최된 인재개발 관련 대회의 결과를 확인하세요.</p>
+        <div className="mt-2 text-gray-400 space-y-3">
+          {content.split(/\n\n+/).filter(p => p.trim()).map((paragraph, idx) => (
+            <p key={idx} className="whitespace-pre-line">{paragraph}</p>
+          ))}
+        </div>
       </div>
       <div className="rounded-xl border border-white/10 overflow-hidden bg-[#111d35]/80 backdrop-blur-sm">
         <div className="overflow-x-auto">
@@ -128,7 +119,7 @@ export default function ResultsDomesticPage() {
               <button onClick={cancelEdit} className="flex items-center gap-2 px-6 py-2.5 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors"><X className="w-4 h-4" />취소</button>
             </div>
           </div>
-        ) : content ? renderApiContent() : renderDefaultContent()}
+        ) : renderDefaultContent()}
       </div>
     </>
   );
