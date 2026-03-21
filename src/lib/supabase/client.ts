@@ -4,6 +4,11 @@ import { createBrowserClient } from "@supabase/ssr";
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co";
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder-key";
 
+// 싱글턴 — 브라우저에서 하나의 인스턴스만 사용하여 세션 상태 일관성 유지
+let client: ReturnType<typeof createBrowserClient> | null = null;
+
 export function createClient() {
-  return createBrowserClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  if (client) return client;
+  client = createBrowserClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  return client;
 }

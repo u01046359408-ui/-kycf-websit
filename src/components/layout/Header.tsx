@@ -165,12 +165,7 @@ export default function Header() {
             {/* Right: Login state */}
             <div className="hidden lg:flex items-center gap-0 text-xs text-white/70 ml-auto">
               {loading ? (
-                <button
-                  onClick={() => setLoginModalOpen(true)}
-                  className="hover:text-white transition-colors duration-200"
-                >
-                  로그인
-                </button>
+                <span className="inline-block w-16" />
               ) : user ? (
                 <>
                   <Link

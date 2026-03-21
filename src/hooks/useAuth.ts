@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
-import type { User } from "@supabase/supabase-js";
+import type { User, AuthChangeEvent, Session } from "@supabase/supabase-js";
 
 interface AuthUser {
   id: string;
@@ -17,48 +17,69 @@ interface UseAuthReturn {
   signOut: () => Promise<void>;
 }
 
+// 모듈 레벨 캐시 — 같은 사용자 ID면 profiles 재조회 방지
+let profileCache: { id: string; name: string | null; role: string } | null = null;
+
 /**
  * 클라이언트 컴포넌트에서 사용할 인증 훅
- * - 현재 사용자 정보 조회
- * - 인증 상태 변경 실시간 감지
- * - 로그아웃 함수 제공
  */
 export function useAuth(): UseAuthReturn {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
+  const initializedRef = useRef(false);
 
-  // Supabase User 객체를 AuthUser로 변환
-  const mapUser = useCallback(
-    async (authUser: User | null): Promise<AuthUser | null> => {
-      if (!authUser) return null;
+  const fetchProfile = useCallback(
+    async (authUser: User): Promise<AuthUser> => {
+      // 캐시된 프로필이 같은 유저면 재사용
+      if (profileCache && profileCache.id === authUser.id) {
+        return {
+          id: authUser.id,
+          email: authUser.email!,
+          name: profileCache.name,
+          role: profileCache.role,
+        };
+      }
 
-      // profiles 테이블에서 추가 정보 조회
       const { data: profile } = await supabase
         .from("profiles")
         .select("name, role")
         .eq("id", authUser.id)
         .single();
 
+      const name = profile?.name || authUser.user_metadata?.name || null;
+      const role = profile?.role || "user";
+
+      // 캐시 저장
+      profileCache = { id: authUser.id, name, role };
+
       return {
         id: authUser.id,
         email: authUser.email!,
-        name: profile?.name || authUser.user_metadata?.name || null,
-        role: profile?.role || "user",
+        name,
+        role,
       };
     },
     [supabase]
   );
 
   useEffect(() => {
-    // 초기 사용자 정보 로드 (getSession은 로컬 캐시 사용으로 빠름)
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+
+    // 초기 로드: getSession으로 빠르게 확인 (로컬 캐시 사용)
     const getInitialUser = async () => {
       try {
         const {
           data: { session },
         } = await supabase.auth.getSession();
-        const mapped = await mapUser(session?.user ?? null);
-        setUser(mapped);
+
+        if (session?.user) {
+          const mapped = await fetchProfile(session.user);
+          setUser(mapped);
+        } else {
+          setUser(null);
+        }
       } catch {
         setUser(null);
       } finally {
@@ -68,29 +89,61 @@ export function useAuth(): UseAuthReturn {
 
     getInitialUser();
 
-    // 인증 상태 변경 리스너 등록
+    // 인증 상태 변경 리스너
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      try {
-        const mapped = await mapUser(session?.user ?? null);
-        setUser(mapped);
-      } catch {
-        // Lock broken 등 에러 무시
+    } = supabase.auth.onAuthStateChange(async (event: AuthChangeEvent, session: Session | null) => {
+      if (event === "SIGNED_OUT") {
+        profileCache = null;
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      if (session?.user) {
+        try {
+          // SIGNED_IN 이벤트면 캐시 무효화
+          if (event === "SIGNED_IN") {
+            profileCache = null;
+          }
+          const mapped = await fetchProfile(session.user);
+          setUser(mapped);
+        } catch {
+          // 에러 무시
+        }
+      } else {
+        setUser(null);
       }
       setLoading(false);
     });
 
+    // 탭이 다시 활성화되면 세션 확인 (장시간 방치 후 복귀 대응)
+    const handleVisibilityChange = async () => {
+      if (document.visibilityState === "visible") {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        if (session?.user) {
+          const mapped = await fetchProfile(session.user);
+          setUser(mapped);
+        } else {
+          profileCache = null;
+          setUser(null);
+        }
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
       subscription.unsubscribe();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [supabase, mapUser]);
+  }, [supabase, fetchProfile]);
 
-  // 로그아웃 함수
   const handleSignOut = useCallback(async () => {
+    profileCache = null;
     await supabase.auth.signOut();
     setUser(null);
-    // 서버 측 세션도 정리하기 위해 페이지 새로고침
     window.location.href = "/login";
   }, [supabase]);
 
