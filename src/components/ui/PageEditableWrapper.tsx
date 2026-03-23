@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Pencil, Save, X, RotateCcw } from "lucide-react";
+import { Pencil, Save, X, RotateCcw, Palette, Bold, Italic, Underline } from "lucide-react";
 
 interface PageEditableWrapperProps {
   pageKey: string;
@@ -38,6 +38,33 @@ export default function PageEditableWrapper({ pageKey, children }: PageEditableW
   const [saved, setSaved] = useState(false);
   const [savedHtml, setSavedHtml] = useState<string | null>(null);
   const [originalHtml, setOriginalHtml] = useState<string>("");
+  const [showColors, setShowColors] = useState(false);
+
+  const COLORS = [
+    { label: "검정", value: "#000000" },
+    { label: "빨강", value: "#DC2626" },
+    { label: "파랑", value: "#2563EB" },
+    { label: "초록", value: "#16A34A" },
+    { label: "주황", value: "#EA580C" },
+    { label: "보라", value: "#9333EA" },
+    { label: "갈색", value: "#92400E" },
+    { label: "금색", value: "#C5963A" },
+    { label: "네이비", value: "#1B2A4A" },
+    { label: "회색", value: "#6B7280" },
+  ];
+
+  // 선택한 텍스트에 색상 적용
+  const applyColor = (color: string) => {
+    document.execCommand("foreColor", false, color);
+    setShowColors(false);
+    contentRef.current?.focus();
+  };
+
+  // 서식 적용 (굵게, 기울임, 밑줄)
+  const applyFormat = (command: string) => {
+    document.execCommand(command, false);
+    contentRef.current?.focus();
+  };
 
   // DB에서 저장된 HTML 로드 (캐시 방지)
   useEffect(() => {
@@ -160,8 +187,66 @@ export default function PageEditableWrapper({ pageKey, children }: PageEditableW
             <>
               <div className="flex items-center gap-2 text-[#C5963A] text-sm font-medium">
                 <Pencil className="w-4 h-4" />
-                편집 중 — 텍스트를 클릭하여 수정하세요
+                편집 중
               </div>
+
+              {/* 구분선 */}
+              <div className="w-px h-6 bg-white/20" />
+
+              {/* 서식 버튼 */}
+              <button
+                onClick={() => applyFormat("bold")}
+                className="p-1.5 text-gray-300 hover:text-white hover:bg-white/10 rounded transition-colors"
+                title="굵게"
+              >
+                <Bold className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => applyFormat("italic")}
+                className="p-1.5 text-gray-300 hover:text-white hover:bg-white/10 rounded transition-colors"
+                title="기울임"
+              >
+                <Italic className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => applyFormat("underline")}
+                className="p-1.5 text-gray-300 hover:text-white hover:bg-white/10 rounded transition-colors"
+                title="밑줄"
+              >
+                <Underline className="w-4 h-4" />
+              </button>
+
+              {/* 구분선 */}
+              <div className="w-px h-6 bg-white/20" />
+
+              {/* 색상 선택 */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowColors(!showColors)}
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 text-gray-300 hover:text-white hover:bg-white/10 rounded transition-colors text-sm"
+                  title="글자 색상"
+                >
+                  <Palette className="w-4 h-4" />
+                  색상
+                </button>
+                {showColors && (
+                  <div className="absolute top-full left-0 mt-2 p-2 bg-[#1a2744] border border-white/20 rounded-lg shadow-xl grid grid-cols-5 gap-1.5 z-50">
+                    {COLORS.map((c) => (
+                      <button
+                        key={c.value}
+                        onClick={() => applyColor(c.value)}
+                        className="w-7 h-7 rounded-md border border-white/20 hover:scale-110 transition-transform"
+                        style={{ backgroundColor: c.value }}
+                        title={c.label}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* 구분선 */}
+              <div className="w-px h-6 bg-white/20" />
+
               <button
                 onClick={saveEdit}
                 disabled={saving}
