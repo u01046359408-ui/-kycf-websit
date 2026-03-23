@@ -39,6 +39,7 @@ export default function PageEditableWrapper({ pageKey, children }: PageEditableW
   const [savedHtml, setSavedHtml] = useState<string | null>(null);
   const [originalHtml, setOriginalHtml] = useState<string>("");
   const [showColors, setShowColors] = useState(false);
+  const savedSelectionRef = useRef<Range | null>(null);
 
   const COLORS = [
     { label: "검정", value: "#000000" },
@@ -53,17 +54,34 @@ export default function PageEditableWrapper({ pageKey, children }: PageEditableW
     { label: "회색", value: "#6B7280" },
   ];
 
+  // 텍스트 선택 범위 저장
+  const saveSelection = () => {
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount > 0) {
+      savedSelectionRef.current = sel.getRangeAt(0).cloneRange();
+    }
+  };
+
+  // 텍스트 선택 범위 복원
+  const restoreSelection = () => {
+    const sel = window.getSelection();
+    if (sel && savedSelectionRef.current) {
+      sel.removeAllRanges();
+      sel.addRange(savedSelectionRef.current);
+    }
+  };
+
   // 선택한 텍스트에 색상 적용
   const applyColor = (color: string) => {
+    restoreSelection();
     document.execCommand("foreColor", false, color);
     setShowColors(false);
-    contentRef.current?.focus();
   };
 
   // 서식 적용 (굵게, 기울임, 밑줄)
   const applyFormat = (command: string) => {
+    restoreSelection();
     document.execCommand(command, false);
-    contentRef.current?.focus();
   };
 
   // DB에서 저장된 HTML 로드 (캐시 방지)
@@ -195,6 +213,7 @@ export default function PageEditableWrapper({ pageKey, children }: PageEditableW
 
               {/* 서식 버튼 */}
               <button
+                onMouseDown={saveSelection}
                 onClick={() => applyFormat("bold")}
                 className="p-1.5 text-gray-300 hover:text-white hover:bg-white/10 rounded transition-colors"
                 title="굵게"
@@ -202,6 +221,7 @@ export default function PageEditableWrapper({ pageKey, children }: PageEditableW
                 <Bold className="w-4 h-4" />
               </button>
               <button
+                onMouseDown={saveSelection}
                 onClick={() => applyFormat("italic")}
                 className="p-1.5 text-gray-300 hover:text-white hover:bg-white/10 rounded transition-colors"
                 title="기울임"
@@ -209,6 +229,7 @@ export default function PageEditableWrapper({ pageKey, children }: PageEditableW
                 <Italic className="w-4 h-4" />
               </button>
               <button
+                onMouseDown={saveSelection}
                 onClick={() => applyFormat("underline")}
                 className="p-1.5 text-gray-300 hover:text-white hover:bg-white/10 rounded transition-colors"
                 title="밑줄"
@@ -222,6 +243,7 @@ export default function PageEditableWrapper({ pageKey, children }: PageEditableW
               {/* 색상 선택 */}
               <div className="relative">
                 <button
+                  onMouseDown={saveSelection}
                   onClick={() => setShowColors(!showColors)}
                   className="flex items-center gap-1.5 px-2.5 py-1.5 text-gray-300 hover:text-white hover:bg-white/10 rounded transition-colors text-sm"
                   title="글자 색상"

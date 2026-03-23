@@ -3,7 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { X, Mail, Lock, LogIn, Loader2 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createBrowserClient } from "@supabase/ssr";
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co";
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder-key";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -36,19 +39,22 @@ export default function LoginModal({
 
     setLoading(true);
 
-    try {
-      const supabase = createClient();
+    // 10초 후 강제로 loading 해제
+    const safetyTimer = setTimeout(() => {
+      setLoading(false);
+      setError("서버 응답이 없습니다. 페이지를 새로고침 후 다시 시도해 주세요.");
+    }, 10000);
 
-      // 15초 타임아웃 설정 (Supabase 절전 복구 대비)
-      const loginPromise = supabase.auth.signInWithPassword({
+    try {
+      // 로그인 전용 클라이언트 (싱글턴 문제 회피)
+      const supabase = createBrowserClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-      const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error("TIMEOUT")), 15000)
-      );
 
-      const { error: signInError } = await Promise.race([loginPromise, timeoutPromise]);
+      clearTimeout(safetyTimer);
 
       if (signInError) {
         setError(getKoreanError(signInError.message));
@@ -56,13 +62,11 @@ export default function LoginModal({
         return;
       }
 
-      // 클라이언트에서 직접 로그인 — 세션 즉시 유효
+      // 로그인 성공
       window.location.reload();
-    } catch (err) {
-      const message = err instanceof Error && err.message === "TIMEOUT"
-        ? "서버 응답이 느립니다. 잠시 후 다시 시도해 주세요."
-        : "서버 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.";
-      setError(message);
+    } catch {
+      clearTimeout(safetyTimer);
+      setError("서버 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.");
       setLoading(false);
     }
   };
@@ -72,7 +76,7 @@ export default function LoginModal({
     setLoading(true);
 
     try {
-      const supabase = createClient();
+      const supabase = createBrowserClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       const { data, error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: provider as "google" | "kakao",
         options: {
