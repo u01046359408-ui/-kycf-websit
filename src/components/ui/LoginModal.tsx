@@ -58,8 +58,11 @@ export default function LoginModal({
         return;
       }
 
-      // 로그인 성공 — 페이지 새로고침으로 미들웨어가 쿠키 세팅
-      window.location.reload();
+      // 로그인 성공 — 쿠키가 확실히 저장되도록 잠시 대기 후 전체 페이지 이동
+      // window.location.href는 reload()보다 쿠키 전달이 확실함
+      setTimeout(() => {
+        window.location.href = window.location.pathname;
+      }, 300);
     } catch {
       clearTimeout(safetyTimer);
       setError("서버 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.");

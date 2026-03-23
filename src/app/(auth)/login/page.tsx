@@ -47,7 +47,10 @@ function LoginForm() {
         return;
       }
 
-      window.location.href = "/";
+      // 쿠키가 확실히 저장되도록 잠시 대기 후 이동
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 300);
     } catch {
       clearTimeout(safetyTimer);
       setError("서버 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.");
