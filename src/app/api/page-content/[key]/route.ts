@@ -17,14 +17,21 @@ export async function GET(
       .eq("page_key", key)
       .single();
 
+    const headers = { "Cache-Control": "no-store, max-age=0" };
+
     if (error || !data) {
-      // DB에 없으면 빈 데이터 반환 (404 대신)
-      return NextResponse.json({ page_key: key, title: "", content: "", metadata: {} });
+      return NextResponse.json(
+        { page_key: key, title: "", content: "", metadata: {} },
+        { headers }
+      );
     }
 
-    return NextResponse.json(data);
+    return NextResponse.json(data, { headers });
   } catch {
-    return NextResponse.json({ page_key: "", title: "", content: "", metadata: {} });
+    return NextResponse.json(
+      { page_key: "", title: "", content: "", metadata: {} },
+      { headers: { "Cache-Control": "no-store, max-age=0" } }
+    );
   }
 }
 

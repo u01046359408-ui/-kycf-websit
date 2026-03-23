@@ -39,9 +39,9 @@ export default function PageEditableWrapper({ pageKey, children }: PageEditableW
   const [savedHtml, setSavedHtml] = useState<string | null>(null);
   const [originalHtml, setOriginalHtml] = useState<string>("");
 
-  // DB에서 저장된 HTML 로드
+  // DB에서 저장된 HTML 로드 (캐시 방지)
   useEffect(() => {
-    fetch(`/api/page-content/${pageKey}`)
+    fetch(`/api/page-content/${pageKey}`, { cache: "no-store" })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data?.metadata?.html) {
@@ -86,9 +86,12 @@ export default function PageEditableWrapper({ pageKey, children }: PageEditableW
         setEditing(false);
         setSaved(true);
         setTimeout(() => setSaved(false), 3000);
+      } else {
+        const data = await res.json().catch(() => null);
+        alert(data?.error || "저장에 실패했습니다. 다시 로그인 후 시도해 주세요.");
       }
     } catch {
-      alert("저장에 실패했습니다.");
+      alert("저장에 실패했습니다. 네트워크 연결을 확인해 주세요.");
     } finally {
       setSaving(false);
     }
