@@ -3,10 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { X, Mail, Lock, LogIn, Loader2 } from "lucide-react";
-import { createBrowserClient } from "@supabase/ssr";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co";
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder-key";
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -37,17 +37,22 @@ export default function LoginModal({
       return;
     }
 
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      setError("서버 설정이 올바르지 않습니다.");
+      return;
+    }
+
     setLoading(true);
 
-    // 10초 후 강제로 loading 해제
+    // 10초 후 강제 loading 해제
     const safetyTimer = setTimeout(() => {
       setLoading(false);
       setError("서버 응답이 없습니다. 페이지를 새로고침 후 다시 시도해 주세요.");
     }, 10000);
 
     try {
-      // 로그인 전용 클라이언트 (싱글턴 문제 회피)
-      const supabase = createBrowserClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      // 순수 supabase-js 클라이언트 사용 (SSR 래퍼 없이)
+      const supabase = createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
@@ -62,7 +67,7 @@ export default function LoginModal({
         return;
       }
 
-      // 로그인 성공
+      // 로그인 성공 — 페이지 새로고침으로 미들웨어가 쿠키 세팅
       window.location.reload();
     } catch {
       clearTimeout(safetyTimer);
@@ -76,7 +81,7 @@ export default function LoginModal({
     setLoading(true);
 
     try {
-      const supabase = createBrowserClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const supabase = createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       const { data, error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: provider as "google" | "kakao",
         options: {
