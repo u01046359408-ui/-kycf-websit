@@ -4,7 +4,7 @@ import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Mail, Lock, LogIn, Loader2 } from "lucide-react";
-import { signInWithEmail, signInWithOAuth } from "@/lib/auth/actions";
+import { signInWithOAuth } from "@/lib/auth/actions";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -25,27 +25,23 @@ function LoginForm() {
 
     setLoading(true);
 
-    // 15초 후 강제 loading 해제
-    const safetyTimer = setTimeout(() => {
-      setLoading(false);
-      setError("서버 응답이 없습니다. 페이지를 새로고침 후 다시 시도해 주세요.");
-    }, 15000);
-
     try {
-      const result = await signInWithEmail(email, password);
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-      clearTimeout(safetyTimer);
+      const data = await res.json();
 
-      if (result.error) {
-        setError(result.error);
+      if (!res.ok) {
+        setError(data.error || "로그인에 실패했습니다.");
         setLoading(false);
         return;
       }
 
-      // 서버 액션이 쿠키를 설정 → 페이지 이동
       window.location.href = "/";
     } catch {
-      clearTimeout(safetyTimer);
       setError("서버 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.");
       setLoading(false);
     }
@@ -54,19 +50,10 @@ function LoginForm() {
   const handleOAuthLogin = async (provider: "kakao" | "google" | "naver") => {
     setError(null);
     setLoading(true);
-
     try {
       const result = await signInWithOAuth(provider);
-
-      if (result.error) {
-        setError(result.error);
-        setLoading(false);
-        return;
-      }
-
-      if (result.url) {
-        window.location.href = result.url;
-      }
+      if (result.error) { setError(result.error); setLoading(false); return; }
+      if (result.url) { window.location.href = result.url; }
     } catch {
       setError("소셜 로그인 중 오류가 발생했습니다.");
       setLoading(false);
@@ -77,20 +64,12 @@ function LoginForm() {
     <div className="relative w-full max-w-md">
       <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
         <div className="text-center mb-8">
-          <Link href="/">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#c9a84c] to-[#e8d48b] bg-clip-text text-transparent">
-              한국유소년체스연맹
-            </h1>
-          </Link>
-          <p className="mt-2 text-sm text-gray-400">
-            인재 육성의 중심, 한국유소년체스연맹에 오신 것을 환영합니다
-          </p>
+          <Link href="/"><h1 className="text-3xl font-bold bg-gradient-to-r from-[#c9a84c] to-[#e8d48b] bg-clip-text text-transparent">한국유소년체스연맹</h1></Link>
+          <p className="mt-2 text-sm text-gray-400">인재 육성의 중심, 한국유소년체스연맹에 오신 것을 환영합니다</p>
         </div>
 
         {(error || urlError) && (
-          <div className="mb-5 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm text-center">
-            {error || urlError}
-          </div>
+          <div className="mb-5 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm text-center">{error || urlError}</div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -101,7 +80,6 @@ function LoginForm() {
               <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="이메일을 입력하세요" disabled={loading} className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#c9a84c]/50 focus:ring-1 focus:ring-[#c9a84c]/50 transition-colors disabled:opacity-50" />
             </div>
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1.5">비밀번호</label>
             <div className="relative">
@@ -109,7 +87,6 @@ function LoginForm() {
               <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="비밀번호를 입력하세요" disabled={loading} className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#c9a84c]/50 focus:ring-1 focus:ring-[#c9a84c]/50 transition-colors disabled:opacity-50" />
             </div>
           </div>
-
           <button type="submit" disabled={loading} className="w-full py-3 bg-gradient-to-r from-[#c9a84c] to-[#d4b85c] text-[#0a1628] font-semibold rounded-lg hover:from-[#d4b85c] hover:to-[#e8d48b] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-[#c9a84c]/20 disabled:opacity-50 disabled:cursor-not-allowed">
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <LogIn className="w-5 h-5" />}
             {loading ? "로그인 중..." : "로그인"}
@@ -147,9 +124,5 @@ function LoginForm() {
 }
 
 export default function LoginPage() {
-  return (
-    <Suspense>
-      <LoginForm />
-    </Suspense>
-  );
+  return (<Suspense><LoginForm /></Suspense>);
 }
