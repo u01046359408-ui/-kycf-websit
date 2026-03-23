@@ -177,7 +177,7 @@ export default function PageEditableWrapper({ pageKey, children }: PageEditableW
     <>
       {/* 관리자 툴바 */}
       <div className="sticky top-20 z-50 mb-6">
-        <div className="inline-flex items-center gap-3 bg-[#1a2744] border border-white/10 rounded-xl px-4 py-2 shadow-lg">
+        <div className="inline-flex flex-wrap items-center gap-2 bg-[#1a2744] border border-white/10 rounded-xl px-4 py-2 shadow-lg">
           {!editing ? (
             <>
               <button
@@ -203,14 +203,6 @@ export default function PageEditableWrapper({ pageKey, children }: PageEditableW
             </>
           ) : (
             <>
-              <div className="flex items-center gap-2 text-[#C5963A] text-sm font-medium">
-                <Pencil className="w-4 h-4" />
-                편집 중
-              </div>
-
-              {/* 구분선 */}
-              <div className="w-px h-6 bg-white/20" />
-
               {/* 서식 버튼 */}
               <button
                 onMouseDown={saveSelection}
