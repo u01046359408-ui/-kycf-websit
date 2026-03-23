@@ -4,10 +4,7 @@ import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Mail, Lock, LogIn, Loader2 } from "lucide-react";
-import { createClient as createSupabaseClient } from "@supabase/supabase-js";
-
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+import { createClient } from "@/lib/supabase/client";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -35,7 +32,7 @@ function LoginForm() {
     }, 10000);
 
     try {
-      const supabase = createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const supabase = createClient();
 
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
@@ -63,7 +60,7 @@ function LoginForm() {
     setLoading(true);
 
     try {
-      const supabase = createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const supabase = createClient();
       const { data, error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: provider as "google" | "kakao",
         options: {

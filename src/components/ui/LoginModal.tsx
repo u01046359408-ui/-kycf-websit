@@ -3,10 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { X, Mail, Lock, LogIn, Loader2 } from "lucide-react";
-import { createClient as createSupabaseClient } from "@supabase/supabase-js";
-
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+import { createClient } from "@/lib/supabase/client";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -37,11 +34,6 @@ export default function LoginModal({
       return;
     }
 
-    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-      setError("서버 설정이 올바르지 않습니다.");
-      return;
-    }
-
     setLoading(true);
 
     // 10초 후 강제 loading 해제
@@ -51,8 +43,7 @@ export default function LoginModal({
     }, 10000);
 
     try {
-      // 순수 supabase-js 클라이언트 사용 (SSR 래퍼 없이)
-      const supabase = createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const supabase = createClient();
 
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
@@ -81,7 +72,7 @@ export default function LoginModal({
     setLoading(true);
 
     try {
-      const supabase = createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const supabase = createClient();
       const { data, error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: provider as "google" | "kakao",
         options: {
