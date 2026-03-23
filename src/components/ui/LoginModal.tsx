@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { X, Mail, Lock, LogIn, Loader2 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { signInWithEmail } from "@/lib/auth/actions";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -36,33 +36,25 @@ export default function LoginModal({
 
     setLoading(true);
 
-    // 10초 후 강제 loading 해제
+    // 15초 후 강제 loading 해제
     const safetyTimer = setTimeout(() => {
       setLoading(false);
       setError("서버 응답이 없습니다. 페이지를 새로고침 후 다시 시도해 주세요.");
-    }, 10000);
+    }, 15000);
 
     try {
-      const supabase = createClient();
-
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const result = await signInWithEmail(email, password);
 
       clearTimeout(safetyTimer);
 
-      if (signInError) {
-        setError(getKoreanError(signInError.message));
+      if (result.error) {
+        setError(result.error);
         setLoading(false);
         return;
       }
 
-      // 로그인 성공 — 쿠키가 확실히 저장되도록 잠시 대기 후 전체 페이지 이동
-      // window.location.href는 reload()보다 쿠키 전달이 확실함
-      setTimeout(() => {
-        window.location.href = window.location.pathname;
-      }, 300);
+      // 서버 액션이 쿠키를 설정했으므로 페이지 이동
+      window.location.href = window.location.pathname;
     } catch {
       clearTimeout(safetyTimer);
       setError("서버 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.");
@@ -75,22 +67,17 @@ export default function LoginModal({
     setLoading(true);
 
     try {
-      const supabase = createClient();
-      const { data, error: oauthError } = await supabase.auth.signInWithOAuth({
-        provider: provider as "google" | "kakao",
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
+      const { signInWithOAuth } = await import("@/lib/auth/actions");
+      const result = await signInWithOAuth(provider);
 
-      if (oauthError) {
-        setError("소셜 로그인 중 오류가 발생했습니다.");
+      if (result.error) {
+        setError(result.error);
         setLoading(false);
         return;
       }
 
-      if (data.url) {
-        window.location.href = data.url;
+      if (result.url) {
+        window.location.href = result.url;
       }
     } catch {
       setError("소셜 로그인 중 오류가 발생했습니다.");
@@ -236,14 +223,4 @@ export default function LoginModal({
       </div>
     </div>
   );
-}
-
-function getKoreanError(message: string): string {
-  const map: Record<string, string> = {
-    "Invalid login credentials": "이메일 또는 비밀번호가 올바르지 않습니다.",
-    "Email not confirmed": "이메일 인증이 완료되지 않았습니다.",
-    "User already registered": "이미 등록된 이메일입니다.",
-    "Email rate limit exceeded": "너무 많은 요청입니다. 잠시 후 다시 시도해 주세요.",
-  };
-  return map[message] || "로그인에 실패했습니다. 다시 시도해 주세요.";
 }
